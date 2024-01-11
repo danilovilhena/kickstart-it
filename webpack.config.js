@@ -1,11 +1,16 @@
-const path = require('path');
+import path from "path";
+import { fileURLToPath } from "url";
 
-module.exports = {
-  entry: './src/main.js',
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default {
+  entry: "./src/main.js",
   output: {
     path: `${path.resolve(__dirname)}/dist`,
-    filename: 'bundle.js',
+    filename: "bundle.js",
   },
+  target: "node14",
   optimization: {
     minimize: true,
   },
