@@ -16,6 +16,7 @@ const main = async () => {
   logSuccess("🎉 Your project is ready!", false);
   logSuccess("------", false);
 
+  // TODO: add a section with a \n before saying: here's what you should do next
 };
 
 main();

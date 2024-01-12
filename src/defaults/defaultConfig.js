@@ -7,7 +7,7 @@ const defaultConfig = {
   language: "js", // "js" | "ts"
   type: "cjs", // "cjs" | "esm"
 
-  css: false, // false | "sass" | "tailwind" | "bootstrap" | "mui"
+  css: false, // false | "sass" | "tailwind" | "mui"
   lint: "eslint", // "eslint" | "standardjs" | false
   eslint: {
     integratePrettier: true, // true | false

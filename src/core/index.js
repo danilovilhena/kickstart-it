@@ -175,6 +175,47 @@ const configureNode = () => {
   fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
 }
 
+const installCss = async () => {
+  startLoading(`Installing ${config.css}`);
+
+  if (config.css === "sass") {
+    await exec({
+      command: installCommand({ name: "sass", isGlobal: true, packageManager: config.packageManager }),
+      errorMessage: "Could not install Sass globally",
+    });
+
+    await exec({
+      command: installCommand({ name: "sass", isDev: true, packageManager: config.packageManager }),
+      errorMessage: "Could not install Sass",
+    });
+    
+    stopLoading();
+    logSuccess("Installed Sass");
+  } else if (config.css === "tailwind") {
+    await exec({
+      command: installCommand({ name: "tailwindcss", isDev: true, packageManager: config.packageManager }),
+      errorMessage: "Could not install Sass globally",
+    });
+
+    await exec({
+      command: `npx init tailwindcss ${config.language === "ts" && "--ts"} ${config.type === "esm" && "--esm"}`,
+    });
+
+    stopLoading();
+    logSuccess("Installed Tailwind");
+  } else if (config.css === "mui") {
+    await exec({
+      command: installCommand({ name: "@mui/material @emotion/react @emotion/styled", packageManager: config.packageManager }),
+      errorMessage: "Could not install Material UI",
+    });
+
+    stopLoading();
+    logSuccess("Installed Material UI");
+  }
+
+  
+}
+
 const kickstart = async () => {
   await checkForPackageJson();
   await checkForGit();
@@ -185,6 +226,8 @@ const kickstart = async () => {
   if (config.husky) await installHusky();
   if (config.language === "ts") await installTypeScript();
   configureNode();
+  if (config.css) await installCss();
+  // TODO: update husky pre-commit hook to run lint-staged or npm run lint
 };
 
 export {

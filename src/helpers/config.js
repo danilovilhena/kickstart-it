@@ -15,7 +15,7 @@ const buildChangelogConfig = async () => {
     ...listPromptConfig("changelog"),
     message: "Would you like to add a CHANGELOG?",
     choices: [
-      { name: "Keep a Changelog", value: "keepAChangelog" },
+      { name: `Keep a Changelog ${chalk.dim("(recommended)")}`, value: "keepAChangelog" },
       { name: "Conventional Changelog", value: "conventionalChangelog" },
       { name: "No", value: false }
     ],
