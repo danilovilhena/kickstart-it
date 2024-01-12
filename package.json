@@ -1,6 +1,6 @@
 {
   "name": "kickstart",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "🚀 The fast way to setup your projects!",
   "exports": "./src/main.js",
   "bin": "./dist/bundle.js",
