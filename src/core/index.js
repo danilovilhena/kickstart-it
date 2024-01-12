@@ -258,6 +258,56 @@ const installLint = async () => {
   }
 }
 
+const installPrettier = async () => {
+  startLoading("Installing Prettier");
+
+  await exec({
+    command: installCommand({ name: "prettier", isDev: true, packageManager: config.packageManager }),
+    errorMessage: "Could not install Prettier",
+  });
+
+  try {
+    await cloneFile(path.resolve(__dirname, "../defaults/format/.prettierrc"), "./.prettierrc");
+    await cloneFile(path.resolve(__dirname, "../defaults/format/.prettierignore"), "./.prettierignore");
+  } catch (error) {
+    logError("Could not create prettier config files");
+  }
+
+  const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
+  packageJson.scripts.format = "prettier --write . \"**/*.{cjs,mjs,js,jsx,ts,tsx,json,md}\"";
+  fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
+
+  stopLoading();
+  logSuccess("Installed Prettier");
+}
+
+const installLintStaged = async () => {
+  startLoading("Installing lint-staged");
+
+  await exec({
+    command: installCommand({ name: "lint-staged", isDev: true, packageManager: config.packageManager }),
+    errorMessage: "Could not install lint-staged",
+  });
+
+  const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
+  packageJson["lint-staged"] = {
+    "*.{cjs,mjs,js,jsx,ts,tsx,json,md}": [
+      "prettier --write",
+    ],
+  };
+  fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
+
+  if (config.husky) {
+    await exec({
+      command: "npx husky add .husky/pre-commit \"npx lint-staged\"",
+      errorMessage: "Could not add lint-staged to pre-commit hook",
+    });
+  }
+
+  stopLoading();
+  logSuccess("Installed lint-staged");
+}
+
 const kickstart = async () => {
   await checkForPackageJson();
   await checkForGit();
@@ -270,6 +320,8 @@ const kickstart = async () => {
   configureNode();
   if (config.css) await installCss();
   if (config.lint) await installLint();
+  if (config?.eslint?.integratePrettier || config.format) await installPrettier();
+  if (config.lintStaged) await installLintStaged();
   // TODO: update husky pre-commit hook to run lint-staged or npm run lint
 };
 
