@@ -1,6 +1,6 @@
 import fs from "fs";
 import { promisify } from "util";
-import { exec as originalExec } from "child_process";
+import { exec as originalExec, spawn as originalSpawn } from "child_process";
 import { logError } from "./logger.js";
 
 const promiseExec = promisify(originalExec);
@@ -27,7 +27,28 @@ const exec = async ({ command, errorMessage }) => {
   }
 };
 
+const spawn = async ({ command, errorMessage }) => {
+  const innerSpawn = () => {
+    return new Promise((resolve, reject) => {
+      const child = originalSpawn(command, { stdio: "inherit", shell: true });
+      child.on("close", (code) => {
+        if (code === 0) resolve();
+        else reject(new Error(code));
+      });
+      child.on("error", () => reject(new Error()));
+    });
+  }
+
+  try {
+    await innerSpawn({ command, errorMessage })
+  } catch (error) {
+    logError(errorMessage);
+    process.exit(1);
+  }
+}
+
 export {
   cloneFile,
   exec,
+  spawn,
 }

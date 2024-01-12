@@ -159,43 +159,43 @@ const buildLintConfig = async () => {
 };
 
 const buildOtherConfig = async () => {
-  const { bundler } = await inquirer.prompt({
-    ...listPromptConfig("bundler"),
-    message: "Would you like to use a module bundler for your project?",
-    choices: [
-      { name: "Webpack", value: "webpack" },
-      { name: "Rollup", value: "rollup" },
-      { name: "Vite", value: "vite" },
-      { name: "Parcel", value: "parcel" },
-      { name: "No", value: false }
-    ],
-  });
+  // const { bundler } = await inquirer.prompt({
+  //   ...listPromptConfig("bundler"),
+  //   message: "Would you like to use a module bundler for your project?",
+  //   choices: [
+  //     { name: "Webpack", value: "webpack" },
+  //     { name: "Rollup", value: "rollup" },
+  //     { name: "Vite", value: "vite" },
+  //     { name: "Parcel", value: "parcel" },
+  //     { name: "No", value: false }
+  //   ],
+  // });
 
-  config.bundler = bundler;
+  // config.bundler = bundler;
 
-  if (config.bundler === "webpack") {
-    const { integrateBabel } = await inquirer.prompt({
-      ...listPromptConfig("integrateBabel"),
-      message: "Would you also like to include Babel with Webpack?",
-      choices: [
-        { name: "Yes", value: true },
-        { name: "No", value: false }
-      ],
-    });
+  // if (config.bundler === "webpack") {
+  //   const { integrateBabel } = await inquirer.prompt({
+  //     ...listPromptConfig("integrateBabel"),
+  //     message: "Would you also like to include Babel with Webpack?",
+  //     choices: [
+  //       { name: "Yes", value: true },
+  //       { name: "No", value: false }
+  //     ],
+  //   });
     
-    config.integrateBabel = integrateBabel;
-  } else if (config.bundler !== false) {
-    const { integrateBabel } = await inquirer.prompt({
-      ...listPromptConfig("integrateBabel"),
-      message: "This bundler comes with built-in transpilation features. Do you want to explicitly add Babel?",
-      choices: [
-        { name: "Yes", value: true },
-        { name: "No", value: false }
-      ],
-    });
+  //   config.integrateBabel = integrateBabel;
+  // } else if (config.bundler !== false) {
+  //   const { integrateBabel } = await inquirer.prompt({
+  //     ...listPromptConfig("integrateBabel"),
+  //     message: "This bundler comes with built-in transpilation features. Do you want to explicitly add Babel?",
+  //     choices: [
+  //       { name: "Yes", value: true },
+  //       { name: "No", value: false }
+  //     ],
+  //   });
     
-    config.integrateBabel = integrateBabel;
-  }
+  //   config.integrateBabel = integrateBabel;
+  // }
 
   const answers = await inquirer.prompt([
     {
@@ -203,7 +203,6 @@ const buildOtherConfig = async () => {
       message: "Would you like to use a testing framework?",
       choices: [
         { name: "Jest", value: "jest" },
-        { name: "Mocha + Chai", value: "mocha+chai" },
         { name: "Jasmine", value: "jasmine" },
         { name: "Cypress", value: "cypress" },
         { name: "Playwright", value: "playwright" },
@@ -219,18 +218,18 @@ const buildOtherConfig = async () => {
         { name: "pnpm", value: "pnpm" }
       ],
     },
-    {
-      ...listPromptConfig("ci"),
-      message: "Would you like to use a CI/CD tool?",
-      choices: [
-        { name: "GitHub Actions", value: "githubActions" },
-        { name: "GitLab CI", value: "gitlabCI" },
-        { name: "CircleCI", value: "circleCI" },
-        { name: "Travis CI", value: "travisCI" },
-        { name: "Jenkins", value: "jenkins" },
-        { name: "No", value: false }
-      ],
-    }
+    // {
+    //   ...listPromptConfig("ci"),
+    //   message: "Would you like to use a CI/CD tool?",
+    //   choices: [
+    //     { name: "GitHub Actions", value: "githubActions" },
+    //     { name: "GitLab CI", value: "gitlabCI" },
+    //     { name: "CircleCI", value: "circleCI" },
+    //     { name: "Travis CI", value: "travisCI" },
+    //     { name: "Jenkins", value: "jenkins" },
+    //     { name: "No", value: false }
+    //   ],
+    // }
   ]);
 
   Object.keys(answers).forEach((key) => {

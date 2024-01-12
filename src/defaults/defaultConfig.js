@@ -16,12 +16,12 @@ const defaultConfig = {
   },
   format: "prettier", // "prettier" | false (not needed if integratePrettier is true)
   lintStaged: true, // true | false
-  
-  bundler: "webpack", // "webpack" | "rollup" | "vite" | "parcel" | false
-  integrateBabel: false, // true | false
-  test: "jest", // "jest" | "mocha+chai" | "jasmine" | "cypress" | "playwright" | false
+  test: "jest", // "jest" | "jasmine" | "cypress" | "playwright" | false
   packageManager: "npm", // "npm" | "yarn" | "pnpm"
-  ci: "githubActions", // "githubActions" | "gitlabCI" | "circleCI" | "travisCI" | "jenkins" | false
+  // TODO: add this in the future
+  // bundler: "webpack", // "webpack" | "rollup" | "vite" | "parcel" | false
+  // integrateBabel: false, // true | false
+  // ci: "githubActions", // "githubActions" | "gitlabCI" | "circleCI" | "travisCI" | "jenkins" | false
 };
 
 export default defaultConfig;

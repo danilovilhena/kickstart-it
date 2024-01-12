@@ -3,7 +3,7 @@ import os from "os";
 import path from "path";
 import { fileURLToPath } from "url";
 
-import { cloneFile, exec } from "../helpers/index.js";
+import { cloneFile, exec, spawn } from "../helpers/index.js";
 import { config } from "../helpers/config.js";
 import { logError, logSuccess, logWarning, startLoading, stopLoading } from "../helpers/logger.js";
 
@@ -256,6 +256,13 @@ const installLint = async () => {
     stopLoading();
     logSuccess("Installed StandardJS");
   }
+
+  if (config.husky && !config.lintStaged) {
+    await exec({
+      command: "npx husky add .husky/pre-commit \"npm run lint\"",
+      errorMessage: "Could not add lint to pre-commit hook",
+    });
+  }
 }
 
 const installPrettier = async () => {
@@ -308,6 +315,59 @@ const installLintStaged = async () => {
   logSuccess("Installed lint-staged");
 }
 
+const installTest = async () => {
+  if (config.test === "jest") {
+    const commands = {
+      npm: "npm init jest@latest",
+      pnpm: "pnpm create jest@latest",
+      yarn: "yarn create jest@latest"
+    }
+    await spawn({ command: commands[config.packageManager], errorMessage: "Could not install Jest"});
+  } else if (config.test === "jasmine") {
+    await exec({
+      command: installCommand({ 
+        name: config.env === "node" ? "jasmine" : "jasmine-browser-runner jasmine-core",
+        isDev: true, 
+        packageManager: config.packageManager 
+      }),
+      errorMessage: "Could not install Jasmine",
+    });
+
+    await exec({
+      command: config.env === "node" ? "npx jasmine init" : "npx jasmine-browser-runner init",
+      errorMessage: "Could not init Jasmine",
+    });
+
+    const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
+    packageJson.scripts.test = config.env === "node" ? "jasmine" : "jasmine-browser-runner runSpecs";
+    fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
+  } else if (config.test === "cypress") {
+    await exec({
+      command: installCommand({ name: "cypress", isDev: true, packageManager: config.packageManager }),
+      errorMessage: "Could not install Cypress",
+    });
+
+    const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
+    packageJson.scripts["cypress:open"] = "cypress open";
+    packageJson.scripts["test"] = "cypress run";
+    fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
+  } else if (config.test === "playwright") {
+    const commands = {
+      npm: "npm init playwright@latest",
+      pnpm: "pnpm create playwright@latest",
+      yarn: "yarn create playwright@latest"
+    }
+    await spawn({ command: commands[config.packageManager], errorMessage: "Could not install Playwright"});
+
+    const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
+    packageJson.scripts["test"] = "npx playwright test";
+    packageJson.scripts["codegen"] = "npx playwright codegen";
+    fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
+  }
+
+  logSuccess(`Installed ${config.test}`);
+}
+
 const kickstart = async () => {
   await checkForPackageJson();
   await checkForGit();
@@ -322,7 +382,7 @@ const kickstart = async () => {
   if (config.lint) await installLint();
   if (config?.eslint?.integratePrettier || config.format) await installPrettier();
   if (config.lintStaged) await installLintStaged();
-  // TODO: update husky pre-commit hook to run lint-staged or npm run lint
+  if (config.test) await installTest();
 };
 
 export {
