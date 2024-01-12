@@ -16,14 +16,14 @@ In less than a minute and just answering questions, you're able to setup:
 
 Simply run the command below:
 ```sh
-npm install -g kickstart
+npm install -g kickstart-it
 ```
 
 ## 💡 Usage
 
 In a new project folder (it can have git initialized or package.json already, but if it doesn't kickstart will create it), run the command:
 ```sh
-kickstart
+kickstart-it
 ```
 
 Then, just answer the prompted questions and your project will be setup.
