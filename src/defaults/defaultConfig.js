@@ -5,8 +5,8 @@ const defaultConfig = {
   gitignore: true, // true | false
   husky: true, // true | false
   language: "js", // "js" | "ts"
+  type: "cjs", // "cjs" | "esm"
 
-  type: "cjs", // "cjs" | "esm",
   css: false, // false | "sass" | "tailwind" | "bootstrap" | "mui"
   lint: "eslint", // "eslint" | "standardjs" | false
   eslint: {

@@ -123,34 +123,39 @@ const createGitIgnore = async () => {
 }
 
 const installHusky = async () => {
-  startLoading("Installing husky");
+  startLoading("Installing Husky");
 
   const initCommand = {
-    npm: "npx husky-init && npm install",
-    yarn: "yarn dlx husky-init --yarn2 && yarn",
-    pnpm: "pnpm dlx husky-init && pnpm install",
+    npm: "npx husky-init",
+    yarn: "yarn dlx husky-init --yarn2",
+    pnpm: "pnpm dlx husky-init",
   };
 
   await exec({
     command: initCommand[config.packageManager],
-    errorMessage: "Could not install husky",
+    errorMessage: "Could not install Husky",
   });
 
   stopLoading();
-  logSuccess("Installed husky");
+  logSuccess("Installed Husky");
 }
 
-const configureTypescript = async () => {
+const installTypeScript = async () => {
+  startLoading("Configuring TypeScript");
+
   const hasTsConfig = fs.existsSync("./tsconfig.json");
   if (hasTsConfig) return;
 
-  exec({
+  await exec({
     command: installCommand({ name: "typescript", isDev: true, packageManager: config.packageManager }),
     errorMessage: "Could not install TypeScript",
   });
 
   const tsConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../defaults/tsconfig/tsconfig.json"), "utf-8"));
-  if (config.type === "esm") tsConfig.compilerOptions.module = "esnext";
+  if (config.type === "esm") {
+    tsConfig.compilerOptions.module = "esnext";
+    tsConfig.compilerOptions.moduleResolution = "node";
+  }
   fs.writeFileSync("./tsconfig.json", JSON.stringify(tsConfig, null, 2));
 
   const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
@@ -160,13 +165,14 @@ const configureTypescript = async () => {
   packageJson.scripts.start = `tsc && node dist/${previousMain}`;
   fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
 
+  stopLoading();
   logSuccess("Configured TypeScript");
 }
 
-const configureNode = async () => {
-  const file = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
-  file.type = config.node.moduleSystem === "cjs" ? "commonjs" : "module";
-  fs.writeFileSync("./package.json", JSON.stringify(file, null, 2));
+const configureNode = () => {
+  const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
+  packageJson.type = config.moduleSystem === "cjs" ? "commonjs" : "module";
+  fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
 }
 
 const kickstart = async () => {
@@ -177,8 +183,8 @@ const kickstart = async () => {
   if (config.readme) await createReadme();
   if (config.gitignore) await createGitIgnore();
   if (config.husky) await installHusky();
-  if (config.language === "ts") await configureTypescript();
-  await configureNode();
+  if (config.language === "ts") await installTypeScript();
+  configureNode();
 };
 
 export {
