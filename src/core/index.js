@@ -10,6 +10,14 @@ import { logError, logSuccess, logWarning, startLoading, stopLoading } from "../
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+const installCommand = ({ name, isGlobal, isDev, packageManager }) => {
+  return {
+    npm: `npm install ${isGlobal && "-g"} ${isDev && "--save-dev"} ${name}`,
+    yarn: `yarn ${isGlobal && "global "}add ${name} ${isDev && "--dev"}`,
+    pnpm: `pnpm add ${isGlobal && "-g"} ${isDev && "--save-dev"} ${name}`,
+  }[packageManager];
+}
+
 const checkForPackageJson = async () => {
   const packageManager = config.packageManager;
   const hasPackageJson = fs.existsSync("./package.json");
@@ -68,15 +76,9 @@ const createChangelog = async () => {
 
 const installCommitizen = async () => {
   const packageManager = config.packageManager;
-  
-  const installCommand = {
-    npm: "npm install commitizen -g",
-    yarn: "yarn global add commitizen",
-    pnpm: "pnpm add commitizen -g",
-  };
 
   await exec({
-    command: installCommand[packageManager],
+    command: installCommand({ name: "commitizen", isGlobal: true, packageManager }),
     errorMessage: "Could not install commitizen",
   });
 
@@ -138,6 +140,35 @@ const installHusky = async () => {
   logSuccess("Installed husky");
 }
 
+const configureTypescript = async () => {
+  const hasTsConfig = fs.existsSync("./tsconfig.json");
+  if (hasTsConfig) return;
+
+  exec({
+    command: installCommand({ name: "typescript", isDev: true, packageManager: config.packageManager }),
+    errorMessage: "Could not install TypeScript",
+  });
+
+  const tsConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../defaults/tsconfig/tsconfig.json"), "utf-8"));
+  if (config.type === "esm") tsConfig.compilerOptions.module = "esnext";
+  fs.writeFileSync("./tsconfig.json", JSON.stringify(tsConfig, null, 2));
+
+  const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
+  const previousMain = packageJson.main;
+  packageJson.main = `dist/${previousMain}`;
+  packageJson.scripts.build = "tsc";
+  packageJson.scripts.start = `tsc && node dist/${previousMain}`;
+  fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
+
+  logSuccess("Configured TypeScript");
+}
+
+const configureNode = async () => {
+  const file = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
+  file.type = config.node.moduleSystem === "cjs" ? "commonjs" : "module";
+  fs.writeFileSync("./package.json", JSON.stringify(file, null, 2));
+}
+
 const kickstart = async () => {
   await checkForPackageJson();
   await checkForGit();
@@ -146,6 +177,8 @@ const kickstart = async () => {
   if (config.readme) await createReadme();
   if (config.gitignore) await createGitIgnore();
   if (config.husky) await installHusky();
+  if (config.language === "ts") await configureTypescript();
+  await configureNode();
 };
 
 export {

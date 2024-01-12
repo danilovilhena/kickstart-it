@@ -6,20 +6,9 @@ const defaultConfig = {
   husky: true, // true | false
   language: "js", // "js" | "ts"
 
-  type: "node", // "node" | "browser"
-  node: {
-    moduleSystem: "cjs", // "cjs" | "esm",
-    framework: false, // false | "express" | "fastify"
-  },
-  browser: {
-    framework: false, // false | "react" | "vue" | "angular"
-    reactVariation: "default", // "default" | "nextjs" | "gatsby" | "preact" (only used if framework is "react")
-    vueVariation: "default", // "default" | "nuxt" | vite (only used if framework is "vue")
-    angularVariation: "default", // "default" | "universal" | "nx-workspace" (only used if framework is "angular")
-    css: false, // false | "sass" | "tailwind" | "bootstrap" | "mui"
-  },
-
-  lint: "eslint", // "eslint" | "Standardjs" | false
+  type: "cjs", // "cjs" | "esm",
+  css: false, // false | "sass" | "tailwind" | "bootstrap" | "mui"
+  lint: "eslint", // "eslint" | "standardjs" | false
   eslint: {
     integratePrettier: true, // true | false
     configuration: "standard", // "standard" | "airbnb" | "google" | "recommended" | "prettier"

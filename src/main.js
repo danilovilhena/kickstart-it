@@ -10,6 +10,8 @@ const main = async () => {
   // await buildConfig();
   await kickstart();
 
+  // TODO: ask if user want to download the config
+
   logSuccess("\n------", false);
   logSuccess("🎉 Your project is ready!", false);
   logSuccess("------", false);

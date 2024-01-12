@@ -73,113 +73,17 @@ const buildFirstBlockConfig = async () => {
     },
     {
       ...listPromptConfig("type"),
-      message: "What type of project is this?",
-      choices: [
-        { name: "Node.js", value: "node" },
-        { name: "Browser", value: "browser" }
-      ],
-    }
-  ]);
-
-  Object.keys(answers).forEach((key) => {
-    config[key] = answers[key];
-  });
-};
-
-const buildNodeConfig = async () => {
-  const answers = await inquirer.prompt([
-    {
-      ...listPromptConfig("moduleSystem"),
       message: "Which module system would you like to use?",
       choices: [
         { name: `CommonJS - ${chalk.green("const path = require('path')")}`, value: "cjs" },
         { name: `ES Modules - ${chalk.green("import path from 'path'")}`, value: "esm" }
       ],
     },
-    {
-      ...listPromptConfig("framework"),
-      message: "Which framework would you like to use?",
-      choices: [
-        { name: "None", value: false },
-        { name: "Express", value: "express" },
-        { name: "Fastify", value: "fastify" }
-      ],
-    }
   ]);
 
   Object.keys(answers).forEach((key) => {
-    config.node[key] = answers[key];
+    config[key] = answers[key];
   });
-};
-
-const buildBrowserConfig = async () => {
-  const { framework } = await inquirer.prompt([
-    {
-      ...listPromptConfig("framework"),
-      message: "Which framework would you like to use?",
-      choices: [
-        { name: "None", value: false },
-        { name: "React", value: "react" },
-        { name: "Vue", value: "vue" },
-        { name: "Angular", value: "angular" }
-      ],
-    }
-  ]);
-
-  config.browser.framework = framework;
-
-  if (config.browser.framework === "react") {
-    const { reactVariation } = await inquirer.prompt({
-      ...listPromptConfig("reactVariation"),
-      message: "Which variation of React would you like to use?",
-      choices: [
-        { name: "Default", value: "default" },
-        { name: "Next.js", value: "nextjs" },
-        { name: "Gatsby", value: "gatsby" },
-        { name: "Preact", value: "preact" }
-      ],
-    });
-    
-    config.browser.reactVariation = reactVariation;
-  } else if (config.browser.framework === "vue") {
-    const { vueVariation } = await inquirer.prompt({
-      ...listPromptConfig("vueVariation"),
-      message: "Which variation of Vue would you like to use?",
-      choices: [
-        { name: "Default", value: "default" },
-        { name: "Nuxt.js", value: "nuxt" },
-        { name: "Vite", value: "vite" }
-      ],
-    });
-    
-    config.browser.vueVariation = vueVariation;
-  } else if (config.browser.framework === "angular") {
-    const { angularVariation } = await inquirer.prompt({
-      ...listPromptConfig("angularVariation"),
-      message: "Which variation of Angular would you like to use?",
-      choices: [
-        { name: "Default", value: "default" },
-        { name: "Universal", value: "universal" },
-        { name: "Nx Workspace", value: "nx-workspace" }
-      ],
-    });
-    
-    config.browser.angularVariation = angularVariation;
-  }
-
-  const { css } = await inquirer.prompt({
-    ...listPromptConfig("css"),
-    message: "Which CSS framework would you like to use?",
-    choices: [
-      { name: "None", value: false },
-      { name: "Sass", value: "sass" },
-      { name: "Tailwind CSS", value: "tailwind" },
-      { name: "Bootstrap", value: "bootstrap" },
-      { name: "Material UI", value: "mui" }
-    ],
-  });
-
-  config.browser.css = css;
 };
 
 const buildLintConfig = async () => {
@@ -329,10 +233,6 @@ const buildOtherConfig = async () => {
 const buildConfig = async () => {
   await buildChangelogConfig();
   await buildFirstBlockConfig();
-
-  if (config.type === "node") await buildNodeConfig();
-  else await buildBrowserConfig();
-  
   await buildLintConfig();
   await buildOtherConfig();
 };
@@ -346,4 +246,6 @@ export {
 TODO: add the following options:
 --config: receive a config file
 --lang: receive a language (i18n)
+
+TODO: add schema validation if config file is provided
 */
