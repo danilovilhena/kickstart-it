@@ -75,6 +75,7 @@ const createChangelog = async () => {
 }
 
 const installCommitizen = async () => {
+  startLoading("Installing Husky");
   const packageManager = config.packageManager;
 
   await exec({
@@ -93,6 +94,7 @@ const installCommitizen = async () => {
     errorMessage: "Could not init commitizen",
   });
 
+  stopLoading();
   logSuccess("Installed commitizen");
 }
 

@@ -51,7 +51,7 @@ const buildFirstBlockConfig = async () => {
       ...listPromptConfig("gitignore"),
       message: "Would you like to add a .gitignore file?",
       choices: [
-        { name: "Yes, with a general template", value: true },
+        { name: `Yes, with a general template ${chalk.dim("(recommended)")}`, value: true },
         { name: "No", value: false }
       ],
     },

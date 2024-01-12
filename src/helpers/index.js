@@ -16,7 +16,7 @@ const cloneFile = async (source, destination) => {
 
     readStream.pipe(writeStream);
   });
-};
+}
 
 const exec = async ({ command, errorMessage }) => {
   try {
@@ -25,7 +25,7 @@ const exec = async ({ command, errorMessage }) => {
     logError(errorMessage);
     process.exit(1);
   }
-};
+}
 
 const spawn = async ({ command, errorMessage }) => {
   const innerSpawn = () => {
@@ -47,7 +47,17 @@ const spawn = async ({ command, errorMessage }) => {
   }
 }
 
+const clearUndefined = () => {
+  const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf8"));
+  
+  if (packageJson.devDependencies?.undefined) delete packageJson.devDependencies.undefined;
+  if (packageJson.dependencies?.undefined) delete packageJson.dependencies.undefined;
+  
+  fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
+}
+
 export {
+  clearUndefined,
   cloneFile,
   exec,
   spawn,
