@@ -1,19 +1,36 @@
 import chalk from "chalk";
+import ora from "ora";
 
-const logWarning = (message, withIcon = false) => {
-  console.log(`${withIcon && "🟡"} ${chalk.yellow(message)}`);
+let spinner;
+
+const logWarning = (message) => {
+  console.log(chalk.yellow(message));
 };
 
-const logSuccess = (message) => {
-  console.log(chalk.green(message));
+const logSuccess = (message, showCheckmark = true) => {
+  console.log(`${showCheckmark ? "✓ ": ""}${chalk.green(message)}`);
 };
 
 const logError = (message) => {
   console.error(chalk.red(`[ERROR] ${message}`));
 }
 
+const startLoading = (message) => {
+  spinner = ora(message).start();
+  spinner.color = "green";
+}
+
+const stopLoading = () => {
+  spinner.stop();
+
+  process.stdout.clearLine();
+  process.stdout.cursorTo(0);
+}
+
 export {
   logError,
   logSuccess,
   logWarning,
+  startLoading,
+  stopLoading,
 }

@@ -1,7 +1,7 @@
 const defaultConfig = {
   changelog: "keepAChangelog", // "keepAChangelog" | "conventionalChangelog" | false
   commitizen: false, // true | false (only used if changelog is "conventionalChangelog")
-  readme: "basic", // "basic" | "detailed" | false
+  readme: true, // true | false
   gitignore: true, // true | false
   husky: true, // true | false
   language: "js", // "js" | "ts"

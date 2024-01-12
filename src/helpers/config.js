@@ -43,8 +43,7 @@ const buildFirstBlockConfig = async () => {
       ...listPromptConfig("readme"),
       message: "Would you like to add a README?",
       choices: [
-        { name: "Yes, with a basic template", value: "basic" },
-        { name: "Yes, with a detailed template", value: "detailed" },
+        { name: "Yes, with a basic template", value: true },
         { name: "No", value: false }
       ],
     },
