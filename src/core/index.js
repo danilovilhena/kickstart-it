@@ -3,8 +3,7 @@ import os from "os";
 import path from "path";
 import { fileURLToPath } from "url";
 
-import exec from "../helpers/exec.js";
-import cloneFile from "../helpers/cloneFile.js";
+import { cloneFile, exec } from "../helpers/index.js";
 import { config } from "../helpers/config.js";
 import { logError, logSuccess, logWarning, startLoading, stopLoading } from "../helpers/logger.js";
 
