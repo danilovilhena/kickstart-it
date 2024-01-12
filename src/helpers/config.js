@@ -79,6 +79,14 @@ const buildFirstBlockConfig = async () => {
         { name: `ES Modules - ${chalk.green("import path from 'path'")}`, value: "esm" }
       ],
     },
+    {
+      ...listPromptConfig("env"),
+      message: "Where is the type of your project?",
+      choices: [
+        { name: "Node.js", value: "node" },
+        { name: "Browser", value: "browser" }
+      ],
+    },
   ]);
 
   Object.keys(answers).forEach((key) => {
@@ -119,33 +127,34 @@ const buildLintConfig = async () => {
         { name: "Airbnb", value: "airbnb" },
         { name: "Google", value: "google" },
         { name: "Recommended", value: "recommended" },
-        { name: "Prettier", value: "prettier" }
       ],
     });
     
     config.eslint.configuration = configuration;
   }
 
-  const { format, lintStaged } = await inquirer.prompt([
-    {
+  if (!config.eslint.integratePrettier) {
+    const { format } = await inquirer.prompt({
       ...listPromptConfig("format"),
       message: "Would you like to use a formatter?",
       choices: [
         { name: "Prettier", value: "prettier" },
         { name: "No", value: false }
       ],
-    },
-    {
-      ...listPromptConfig("lintStaged"),
-      message: "Would you like to use a lint-staged?",
-      choices: [
-        { name: "Yes", value: true },
-        { name: "No", value: false }
-      ],
-    }
-  ]);
+    });
 
-  config.format = format;
+    config.format = format;
+  }
+
+  const { lintStaged } = await inquirer.prompt({
+    ...listPromptConfig("lintStaged"),
+    message: "Would you like to use a lint-staged?",
+    choices: [
+      { name: "Yes", value: true },
+      { name: "No", value: false }
+    ],
+  });
+  
   config.lintStaged = lintStaged;
 };
 

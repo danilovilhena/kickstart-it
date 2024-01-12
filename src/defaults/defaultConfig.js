@@ -6,14 +6,15 @@ const defaultConfig = {
   husky: true, // true | false
   language: "js", // "js" | "ts"
   type: "cjs", // "cjs" | "esm"
+  env: "node", // "node" | "browser"
 
   css: false, // false | "sass" | "tailwind" | "mui"
   lint: "eslint", // "eslint" | "standardjs" | false
   eslint: {
-    integratePrettier: true, // true | false
-    configuration: "standard", // "standard" | "airbnb" | "google" | "recommended" | "prettier"
+    integratePrettier: false, // true | false
+    configuration: "standard", // "standard" | "airbnb" | "google" | "recommended"
   },
-  format: "prettier", // "prettier" | false
+  format: "prettier", // "prettier" | false (not needed if integratePrettier is true)
   lintStaged: true, // true | false
   
   bundler: "webpack", // "webpack" | "rollup" | "vite" | "parcel" | false

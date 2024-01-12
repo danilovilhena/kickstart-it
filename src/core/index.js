@@ -216,6 +216,48 @@ const installCss = async () => {
   
 }
 
+const installLint = async () => {
+  startLoading(`Installing ${config.lint}`);
+
+  if (config.lint === "eslint") {
+    await exec({
+      command: installCommand({ name: "eslint", isDev: true, packageManager: config.packageManager }),
+      errorMessage: "Could not install ESLint",
+    });
+
+    fs.writeFileSync("./.eslintrc.json", JSON.stringify({
+      extends: [
+        config.eslint.configuration,
+        config.eslint.integratePrettier && "prettier",
+      ],
+      env: {
+        [config.env]: true,
+      },
+    }, null, 2));
+
+    const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
+    packageJson.scripts.lint = "eslint . --ext .js,.jsx,.ts,.tsx";
+    packageJson.scripts["lint:fix"] = "eslint . --ext .js,.jsx,.ts,.tsx --fix";
+    fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
+
+    stopLoading();
+    logSuccess("Installed ESLint");
+  } else if (config.lint === "standardjs") {
+    await exec({
+      command: installCommand({ name: "standard", isDev: true, packageManager: config.packageManager }),
+      errorMessage: "Could not install StandardJS",
+    });
+
+    const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
+    packageJson.scripts.lint = "standard";
+    packageJson.scripts["lint:fix"] = "standard --fix";
+    fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
+
+    stopLoading();
+    logSuccess("Installed StandardJS");
+  }
+}
+
 const kickstart = async () => {
   await checkForPackageJson();
   await checkForGit();
@@ -227,6 +269,7 @@ const kickstart = async () => {
   if (config.language === "ts") await installTypeScript();
   configureNode();
   if (config.css) await installCss();
+  if (config.lint) await installLint();
   // TODO: update husky pre-commit hook to run lint-staged or npm run lint
 };
 
