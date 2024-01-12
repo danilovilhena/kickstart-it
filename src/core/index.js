@@ -12,9 +12,9 @@ const __dirname = path.dirname(__filename);
 
 const installCommand = ({ name, isGlobal, isDev, packageManager }) => {
   return {
-    npm: `npm install ${isGlobal && "-g"} ${isDev && "--save-dev"} ${name}`,
-    yarn: `yarn ${isGlobal && "global "}add ${name} ${isDev && "--dev"}`,
-    pnpm: `pnpm add ${isGlobal && "-g"} ${isDev && "--save-dev"} ${name}`,
+    npm: `npm install ${isGlobal ? "-g" : ""} ${isDev ? "--save-dev" : ""} ${name}`,
+    yarn: `yarn ${isGlobal ? "global " : ""}add ${name} ${isDev ? "--dev" : ""}`,
+    pnpm: `pnpm add ${isGlobal ? "-g": ""} ${isDev ? "--save-dev" : ""} ${name}`,
   }[packageManager];
 }
 
@@ -326,6 +326,7 @@ const installTest = async () => {
     }
     await spawn({ command: commands[config.packageManager], errorMessage: "Could not install Jest"});
   } else if (config.test === "jasmine") {
+    startLoading("Installing Jasmine");
     await exec({
       command: installCommand({ 
         name: config.env === "node" ? "jasmine" : "jasmine-browser-runner jasmine-core",
@@ -343,7 +344,9 @@ const installTest = async () => {
     const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
     packageJson.scripts.test = config.env === "node" ? "jasmine" : "jasmine-browser-runner runSpecs";
     fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
+    stopLoading();
   } else if (config.test === "cypress") {
+    startLoading("Installing cypress");
     await exec({
       command: installCommand({ name: "cypress", isDev: true, packageManager: config.packageManager }),
       errorMessage: "Could not install Cypress",
@@ -353,6 +356,7 @@ const installTest = async () => {
     packageJson.scripts["cypress:open"] = "cypress open";
     packageJson.scripts["test"] = "cypress run";
     fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
+    stopLoading();
   } else if (config.test === "playwright") {
     const commands = {
       npm: "npm init playwright@latest",
