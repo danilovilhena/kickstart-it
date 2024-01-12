@@ -171,7 +171,7 @@ const installTypeScript = async () => {
 
 const configureNode = () => {
   const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
-  packageJson.type = config.moduleSystem === "cjs" ? "commonjs" : "module";
+  packageJson.type = config.type === "cjs" ? "commonjs" : "module";
   fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
 }
 
