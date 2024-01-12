@@ -1,9 +1,9 @@
 # 🚀 Kickstart
 **The fast way to setup your Javascript projects!**
 
-https://github.com/danilovilhena/kickstart/assets/54288190/11c1977e-dde0-4893-9cab-232a46a219da
+https://github.com/danilovilhena/kickstart/assets/54288190/f59961a9-2584-4712-b2f1-2a112888ec73
 
-In minutes (or even seconds), and through simple questions, you're able to setup:
+In less than a minute and just answering questions, you're able to setup:
 
 ✅ README, Changelog, Commitizen and .gitignore<br>
 ✅ Husky and lint-staged<br>
