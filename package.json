@@ -1,6 +1,6 @@
 {
   "name": "kickstart-it",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "🚀 The fastest way to setup your projects!",
   "bin": {
     "kickstart-it": "./dist/bundle.cjs"
@@ -8,8 +8,8 @@
   "scripts": {
     "start": "node src/main.js",
     "build": "webpack --mode production",
-    "lint": "eslint . --ext .js",
-    "lint-fix": "eslint . --ext .js --fix",
+    "lint": "standard",
+    "lint-fix": "standard --fix",
     "prepare": "husky install",
     "prepublish": "npm run build",
     "test": ""
@@ -41,12 +41,8 @@
     "ora": "^8.0.1"
   },
   "devDependencies": {
-    "@webpack-cli/generators": "^3.0.7",
-    "eslint": "^8.56.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-json": "^3.1.0",
     "husky": "^8.0.0",
+    "standard": "^17.1.0",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4"
   },
