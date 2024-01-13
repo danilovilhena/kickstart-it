@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import chalk from "chalk";
 import { kickstart } from "./core/index.js";
 import { clearUndefined } from "./helpers/index.js";

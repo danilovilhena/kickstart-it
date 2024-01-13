@@ -1,7 +1,7 @@
 # 🚀 Kickstart
 **The fast way to setup your Javascript projects!**
 
-https://github.com/danilovilhena/kickstart/assets/54288190/f59961a9-2584-4712-b2f1-2a112888ec73
+![Kickstart demonstration](https://github.com/danilovilhena/kickstart-it/assets/54288190/3432eb44-a96c-4431-a87c-476e257a02f3)
 
 In less than a minute and just answering questions, you're able to setup:
 
@@ -37,11 +37,11 @@ Having trouble? Please email me at danilo.vilhena@gmail.com
 
 ## 🛣️ Roadmap
 
-- [ ] `--config` flag to allow reuse of configuration
-- [ ] `--lang` flag to prompt questions in different language
-- [ ] Support to non-interactive terminals
-- [ ] Automated tests 😆
-- [ ] Bundlers, Babel and CI to the supported tools
+- `--config` flag to allow reuse of configuration
+- `--lang` flag to prompt questions in different language
+- Support to non-interactive terminals
+- Automated tests 😆
+- Bundlers, Babel and CI to the supported tools
 
 ## Did this package help you?
 Star this repo and share it with your friends. And if you'd like, send a donation here 👇
