@@ -26,6 +26,11 @@ const checkForPackageJson = async () => {
   logWarning(`No package.json found. Creating one with ${packageManager}!`);
 
   const platform = os.platform();
+  let initCommand = `${packageManager} init`;
+
+  if (packageManager !== "pnpm") {
+    initCommand += " -y";
+  }
 
   await exec({
     command: `${platform === "win32" ? "where" : "which"} ${packageManager}`,
@@ -33,7 +38,7 @@ const checkForPackageJson = async () => {
   });
 
   await exec({
-    command: `${packageManager} init -y`,
+    command: initCommand,
     errorMessage: "Could not create package.json",
   });
 
