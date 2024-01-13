@@ -10,7 +10,7 @@ In less than a minute and just answering questions, you're able to setup:
 ✅ Linter (ESLint or StandardJS) and formatter (Prettier)<br>
 ✅ CSS frameworks (Tailwind, Sass or Material UI) and testing frameworks (Jest, Jasmine, Cypress or Playwright)
 
-**It's all 100% customizable! 🎉** 
+**It's all 100% customizable! 🎉**
 
 ## 🔧 Installation
 
@@ -28,7 +28,7 @@ kickstart-it [--config=<path-to-file>]
 
 ### Flags
 
-- `--config`: use a config file (check the next section) 
+- `--config`: use a config file (check the next section)
 
 ### Configuration
 The config file must be in JSON. It can have the following properties:
@@ -62,6 +62,10 @@ Having trouble? Please email me at danilo.vilhena@gmail.com
 ## 👥 Contributing
 
 **Please do!** This project is open source, and I greatly appreciate contributions from anyone! So report bugs, suggest new features and open pull requests to improve the current code!
+
+## 📝 Changelog
+
+Please check the [CHANGELOG](https://github.com/danilovilhena/kickstart-it/blob/main/CHANGELOG.md) file.
 
 ## 🛣️ Roadmap
 
