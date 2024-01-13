@@ -35,7 +35,7 @@ The config file must be in JSON. It can have the following properties:
 
 > P.S.: You don't have to add all of them, just include the ones you need! All `false` or missing properties, won't be initialized.
 
-| Property | Values | Note |
+| Property | Accepted values | Note |
 | -------- | ------ | ----------- |
 | `changelog` | "keepAChangelog", "conventionalChangelog", false  | |
 | `commitizen` | true, false | Only used if `changelog` is "conventionalChangelog" |
