@@ -1,401 +1,399 @@
-import fs from "fs";
-import os from "os";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from 'fs'
+import os from 'os'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
-import { cloneFile, exec, spawn } from "../helpers/index.js";
-import { config } from "../helpers/config.js";
-import { logError, logSuccess, logWarning, startLoading, stopLoading } from "../helpers/logger.js";
+import { cloneFile, exec, spawn } from '../helpers/index.js'
+import { config } from '../helpers/config.js'
+import { logError, logSuccess, logWarning, startLoading, stopLoading } from '../helpers/logger.js'
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const installCommand = ({ name, isGlobal, isDev, packageManager }) => {
   return {
-    npm: `npm install ${isGlobal ? "-g" : ""} ${isDev ? "--save-dev" : ""} ${name}`,
-    yarn: `yarn ${isGlobal ? "global " : ""}add ${name} ${isDev ? "--dev" : ""}`,
-    pnpm: `pnpm add ${isGlobal ? "-g": ""} ${isDev ? "--save-dev" : ""} ${name}`,
-  }[packageManager];
+    npm: `npm install ${isGlobal ? '-g' : ''} ${isDev ? '--save-dev' : ''} ${name}`,
+    yarn: `yarn ${isGlobal ? 'global ' : ''}add ${name} ${isDev ? '--dev' : ''}`,
+    pnpm: `pnpm add ${isGlobal ? '-g' : ''} ${isDev ? '--save-dev' : ''} ${name}`
+  }[packageManager]
 }
 
 const checkForPackageJson = async () => {
-  const packageManager = config.packageManager;
-  const hasPackageJson = fs.existsSync("./package.json");
-  if (hasPackageJson) return;
+  const packageManager = config.packageManager
+  const hasPackageJson = fs.existsSync('./package.json')
+  if (hasPackageJson) return
 
-  logWarning(`No package.json found. Creating one with ${packageManager}!`);
+  logWarning(`No package.json found. Creating one with ${packageManager}!`)
 
-  const platform = os.platform();
+  const platform = os.platform()
 
   await exec({
-    command: `${platform === "win32" ? "where" : "which"} ${packageManager}`,
-    errorMessage: `Could not find ${packageManager}. Please install it and try again.`,
-  });
+    command: `${platform === 'win32' ? 'where' : 'which'} ${packageManager}`,
+    errorMessage: `Could not find ${packageManager}. Please install it and try again.`
+  })
 
   await exec({
     command: `${packageManager} init -y`,
-    errorMessage: "Could not create package.json",
-  });
+    errorMessage: 'Could not create package.json'
+  })
 
-  logSuccess("Created package.json");
+  logSuccess('Created package.json')
 }
 
 const checkForGit = async () => {
-  const hasGit = fs.existsSync("./.git");
-  if (hasGit) return;
+  const hasGit = fs.existsSync('./.git')
+  if (hasGit) return
 
-  const platform = os.platform();
+  const platform = os.platform()
 
-  logWarning("No git repository found. Creating one now!");
-
-  await exec({
-    command: `${platform === "win32" ? "where" : "which"} git`,
-    errorMessage: "Could not find git. Please install it and try again.",
-  });
+  logWarning('No git repository found. Creating one now!')
 
   await exec({
-    command: "git init",
-    errorMessage: "Could not create .git"
-  });
+    command: `${platform === 'win32' ? 'where' : 'which'} git`,
+    errorMessage: 'Could not find git. Please install it and try again.'
+  })
 
-  logSuccess("Created .git");
+  await exec({
+    command: 'git init',
+    errorMessage: 'Could not create .git'
+  })
+
+  logSuccess('Created .git')
 }
 
 const createChangelog = async () => {
-  const hasChangelog = fs.existsSync("./CHANGELOG.md");
-  if (hasChangelog) return;
+  const hasChangelog = fs.existsSync('./CHANGELOG.md')
+  if (hasChangelog) return
 
   try {
-    await cloneFile(path.resolve(__dirname, `../defaults/changelog/${config.changelog}.md`), "./CHANGELOG.md");
+    await cloneFile(path.resolve(__dirname, `../defaults/changelog/${config.changelog}.md`), './CHANGELOG.md')
   } catch (error) {
-    logError("Could not create CHANGELOG.md");
+    logError('Could not create CHANGELOG.md')
   }
 
-  logSuccess("Created CHANGELOG.md");
+  logSuccess('Created CHANGELOG.md')
 }
 
 const installCommitizen = async () => {
-  startLoading("Installing Husky");
-  const packageManager = config.packageManager;
+  startLoading('Installing Husky')
+  const packageManager = config.packageManager
 
   await exec({
-    command: installCommand({ name: "commitizen", isGlobal: true, packageManager }),
-    errorMessage: "Could not install commitizen",
-  });
+    command: installCommand({ name: 'commitizen', isGlobal: true, packageManager }),
+    errorMessage: 'Could not install commitizen'
+  })
 
   const initCommand = {
-    npm: "commitizen init cz-conventional-changelog --save-dev --save-exact",
-    yarn: "commitizen init cz-conventional-changelog --yarn --dev --exact",
-    pnpm: "commitizen init cz-conventional-changelog --pnpm --save-dev --save-exact",
-  };
+    npm: 'commitizen init cz-conventional-changelog --save-dev --save-exact',
+    yarn: 'commitizen init cz-conventional-changelog --yarn --dev --exact',
+    pnpm: 'commitizen init cz-conventional-changelog --pnpm --save-dev --save-exact'
+  }
 
   await exec({
     command: initCommand[packageManager],
-    errorMessage: "Could not init commitizen",
-  });
+    errorMessage: 'Could not init commitizen'
+  })
 
-  stopLoading();
-  logSuccess("Installed commitizen");
+  stopLoading()
+  logSuccess('Installed commitizen')
 }
 
 const createReadme = async () => {
-  const hasReadme = fs.existsSync("./README.md");
-  if (hasReadme) return;
+  const hasReadme = fs.existsSync('./README.md')
+  if (hasReadme) return
 
   try {
-    await cloneFile(path.resolve(__dirname, "../defaults/readme/example.md"), "./README.md");
+    await cloneFile(path.resolve(__dirname, '../defaults/readme/example.md'), './README.md')
   } catch (error) {
-    logError("Could not create README.md");
+    logError('Could not create README.md')
   }
 
-  logSuccess("Created README.md");
+  logSuccess('Created README.md')
 }
 
 const createGitIgnore = async () => {
-  const hasGitIgnore = fs.existsSync("./.gitignore");
-  if (hasGitIgnore) return;
+  const hasGitIgnore = fs.existsSync('./.gitignore')
+  if (hasGitIgnore) return
 
   try {
-    await cloneFile(path.resolve(__dirname, "../defaults/gitignore/example.md"), "./.gitignore");
+    await cloneFile(path.resolve(__dirname, '../defaults/gitignore/example.md'), './.gitignore')
   } catch (error) {
-    logError("Could not create .gitignore");
+    logError('Could not create .gitignore')
   }
 
-  logSuccess("Created .gitignore");
+  logSuccess('Created .gitignore')
 }
 
 const installHusky = async () => {
-  startLoading("Installing Husky");
+  startLoading('Installing Husky')
 
   const initCommand = {
-    npm: "npx husky-init",
-    yarn: "yarn dlx husky-init --yarn2",
-    pnpm: "pnpm dlx husky-init",
-  };
+    npm: 'npx husky-init',
+    yarn: 'yarn dlx husky-init --yarn2',
+    pnpm: 'pnpm dlx husky-init'
+  }
 
   await exec({
     command: initCommand[config.packageManager],
-    errorMessage: "Could not install Husky",
-  });
+    errorMessage: 'Could not install Husky'
+  })
 
-  stopLoading();
-  logSuccess("Installed Husky");
+  stopLoading()
+  logSuccess('Installed Husky')
 }
 
 const installTypeScript = async () => {
-  startLoading("Configuring TypeScript");
+  startLoading('Configuring TypeScript')
 
-  const hasTsConfig = fs.existsSync("./tsconfig.json");
-  if (hasTsConfig) return;
+  const hasTsConfig = fs.existsSync('./tsconfig.json')
+  if (hasTsConfig) return
 
   await exec({
-    command: installCommand({ name: "typescript", isDev: true, packageManager: config.packageManager }),
-    errorMessage: "Could not install TypeScript",
-  });
+    command: installCommand({ name: 'typescript', isDev: true, packageManager: config.packageManager }),
+    errorMessage: 'Could not install TypeScript'
+  })
 
-  const tsConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../defaults/tsconfig/tsconfig.json"), "utf-8"));
-  if (config.type === "esm") {
-    tsConfig.compilerOptions.module = "esnext";
-    tsConfig.compilerOptions.moduleResolution = "node";
+  const tsConfig = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../defaults/tsconfig/tsconfig.json'), 'utf-8'))
+  if (config.type === 'esm') {
+    tsConfig.compilerOptions.module = 'esnext'
+    tsConfig.compilerOptions.moduleResolution = 'node'
   }
-  fs.writeFileSync("./tsconfig.json", JSON.stringify(tsConfig, null, 2));
+  fs.writeFileSync('./tsconfig.json', JSON.stringify(tsConfig, null, 2))
 
-  const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
-  const previousMain = packageJson.main;
-  packageJson.main = `dist/${previousMain}`;
-  packageJson.scripts.build = "tsc";
-  packageJson.scripts.start = `tsc && node dist/${previousMain}`;
-  fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
+  const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf-8'))
+  const previousMain = packageJson.main
+  packageJson.main = `dist/${previousMain}`
+  packageJson.scripts.build = 'tsc'
+  packageJson.scripts.start = `tsc && node dist/${previousMain}`
+  fs.writeFileSync('./package.json', JSON.stringify(packageJson, null, 2))
 
-  stopLoading();
-  logSuccess("Configured TypeScript");
+  stopLoading()
+  logSuccess('Configured TypeScript')
 }
 
 const configureNode = () => {
-  const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
-  packageJson.type = config.type === "cjs" ? "commonjs" : "module";
-  fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
+  const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf-8'))
+  packageJson.type = config.type === 'cjs' ? 'commonjs' : 'module'
+  fs.writeFileSync('./package.json', JSON.stringify(packageJson, null, 2))
 }
 
 const installCss = async () => {
-  startLoading(`Installing ${config.css}`);
+  startLoading(`Installing ${config.css}`)
 
-  if (config.css === "sass") {
+  if (config.css === 'sass') {
     await exec({
-      command: installCommand({ name: "sass", isGlobal: true, packageManager: config.packageManager }),
-      errorMessage: "Could not install Sass globally",
-    });
-
-    await exec({
-      command: installCommand({ name: "sass", isDev: true, packageManager: config.packageManager }),
-      errorMessage: "Could not install Sass",
-    });
-    
-    stopLoading();
-    logSuccess("Installed Sass");
-  } else if (config.css === "tailwind") {
-    await exec({
-      command: installCommand({ name: "tailwindcss", isDev: true, packageManager: config.packageManager }),
-      errorMessage: "Could not install Sass globally",
-    });
+      command: installCommand({ name: 'sass', isGlobal: true, packageManager: config.packageManager }),
+      errorMessage: 'Could not install Sass globally'
+    })
 
     await exec({
-      command: `npx init tailwindcss ${config.language === "ts" && "--ts"} ${config.type === "esm" && "--esm"}`,
-    });
+      command: installCommand({ name: 'sass', isDev: true, packageManager: config.packageManager }),
+      errorMessage: 'Could not install Sass'
+    })
 
-    stopLoading();
-    logSuccess("Installed Tailwind");
-  } else if (config.css === "mui") {
+    stopLoading()
+    logSuccess('Installed Sass')
+  } else if (config.css === 'tailwind') {
     await exec({
-      command: installCommand({ name: "@mui/material @emotion/react @emotion/styled", packageManager: config.packageManager }),
-      errorMessage: "Could not install Material UI",
-    });
+      command: installCommand({ name: 'tailwindcss', isDev: true, packageManager: config.packageManager }),
+      errorMessage: 'Could not install Sass globally'
+    })
 
-    stopLoading();
-    logSuccess("Installed Material UI");
+    await exec({
+      command: `npx init tailwindcss ${config.language === 'ts' && '--ts'} ${config.type === 'esm' && '--esm'}`
+    })
+
+    stopLoading()
+    logSuccess('Installed Tailwind')
+  } else if (config.css === 'mui') {
+    await exec({
+      command: installCommand({ name: '@mui/material @emotion/react @emotion/styled', packageManager: config.packageManager }),
+      errorMessage: 'Could not install Material UI'
+    })
+
+    stopLoading()
+    logSuccess('Installed Material UI')
   }
-
-  
 }
 
 const installLint = async () => {
-  startLoading(`Installing ${config.lint}`);
+  startLoading(`Installing ${config.lint}`)
 
-  if (config.lint === "eslint") {
+  if (config.lint === 'eslint') {
     await exec({
-      command: installCommand({ name: "eslint", isDev: true, packageManager: config.packageManager }),
-      errorMessage: "Could not install ESLint",
-    });
+      command: installCommand({ name: 'eslint', isDev: true, packageManager: config.packageManager }),
+      errorMessage: 'Could not install ESLint'
+    })
 
-    fs.writeFileSync("./.eslintrc.json", JSON.stringify({
+    fs.writeFileSync('./.eslintrc.json', JSON.stringify({
       extends: [
         config.eslint.configuration,
-        config.eslint.integratePrettier && "prettier",
+        config.eslint.integratePrettier && 'prettier'
       ],
       env: {
-        [config.env]: true,
-      },
-    }, null, 2));
+        [config.env]: true
+      }
+    }, null, 2))
 
-    const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
-    packageJson.scripts.lint = "eslint . --ext .js,.jsx,.ts,.tsx";
-    packageJson.scripts["lint:fix"] = "eslint . --ext .js,.jsx,.ts,.tsx --fix";
-    fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
+    const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf-8'))
+    packageJson.scripts.lint = 'eslint . --ext .js,.jsx,.ts,.tsx'
+    packageJson.scripts['lint:fix'] = 'eslint . --ext .js,.jsx,.ts,.tsx --fix'
+    fs.writeFileSync('./package.json', JSON.stringify(packageJson, null, 2))
 
-    stopLoading();
-    logSuccess("Installed ESLint");
-  } else if (config.lint === "standardjs") {
+    stopLoading()
+    logSuccess('Installed ESLint')
+  } else if (config.lint === 'standardjs') {
     await exec({
-      command: installCommand({ name: "standard", isDev: true, packageManager: config.packageManager }),
-      errorMessage: "Could not install StandardJS",
-    });
+      command: installCommand({ name: 'standard', isDev: true, packageManager: config.packageManager }),
+      errorMessage: 'Could not install StandardJS'
+    })
 
-    const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
-    packageJson.scripts.lint = "standard";
-    packageJson.scripts["lint:fix"] = "standard --fix";
-    fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
+    const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf-8'))
+    packageJson.scripts.lint = 'standard'
+    packageJson.scripts['lint:fix'] = 'standard --fix'
+    fs.writeFileSync('./package.json', JSON.stringify(packageJson, null, 2))
 
-    stopLoading();
-    logSuccess("Installed StandardJS");
+    stopLoading()
+    logSuccess('Installed StandardJS')
   }
 
   if (config.husky && !config.lintStaged) {
     await exec({
-      command: "npx husky add .husky/pre-commit \"npm run lint\"",
-      errorMessage: "Could not add lint to pre-commit hook",
-    });
+      command: 'npx husky add .husky/pre-commit "npm run lint"',
+      errorMessage: 'Could not add lint to pre-commit hook'
+    })
   }
 }
 
 const installPrettier = async () => {
-  startLoading("Installing Prettier");
+  startLoading('Installing Prettier')
 
   await exec({
-    command: installCommand({ name: "prettier", isDev: true, packageManager: config.packageManager }),
-    errorMessage: "Could not install Prettier",
-  });
+    command: installCommand({ name: 'prettier', isDev: true, packageManager: config.packageManager }),
+    errorMessage: 'Could not install Prettier'
+  })
 
   try {
-    await cloneFile(path.resolve(__dirname, "../defaults/format/.prettierrc"), "./.prettierrc");
-    await cloneFile(path.resolve(__dirname, "../defaults/format/.prettierignore"), "./.prettierignore");
+    await cloneFile(path.resolve(__dirname, '../defaults/format/.prettierrc'), './.prettierrc')
+    await cloneFile(path.resolve(__dirname, '../defaults/format/.prettierignore'), './.prettierignore')
   } catch (error) {
-    logError("Could not create prettier config files");
+    logError('Could not create prettier config files')
   }
 
-  const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
-  packageJson.scripts.format = "prettier --write . \"**/*.{cjs,mjs,js,jsx,ts,tsx,json,md}\"";
-  fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
+  const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf-8'))
+  packageJson.scripts.format = 'prettier --write . "**/*.{cjs,mjs,js,jsx,ts,tsx,json,md}"'
+  fs.writeFileSync('./package.json', JSON.stringify(packageJson, null, 2))
 
-  stopLoading();
-  logSuccess("Installed Prettier");
+  stopLoading()
+  logSuccess('Installed Prettier')
 }
 
 const installLintStaged = async () => {
-  startLoading("Installing lint-staged");
+  startLoading('Installing lint-staged')
 
   await exec({
-    command: installCommand({ name: "lint-staged", isDev: true, packageManager: config.packageManager }),
-    errorMessage: "Could not install lint-staged",
-  });
+    command: installCommand({ name: 'lint-staged', isDev: true, packageManager: config.packageManager }),
+    errorMessage: 'Could not install lint-staged'
+  })
 
-  let command;
-  if (config.format === "prettier") command = "prettier --write";
-  else if (config.lint === "eslint") command = "eslint . --ext .js,.jsx,.ts,.tsx --fix";
-  else if (config.lint === "standardjs") command = "standard --fix";
+  let command
+  if (config.format === 'prettier') command = 'prettier --write'
+  else if (config.lint === 'eslint') command = 'eslint . --ext .js,.jsx,.ts,.tsx --fix'
+  else if (config.lint === 'standardjs') command = 'standard --fix'
 
-  const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
-  packageJson["lint-staged"] = {
-    "*.{cjs,mjs,js,jsx,ts,tsx,json,md}": [ command ],
-  };
-  fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
+  const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf-8'))
+  packageJson['lint-staged'] = {
+    '*.{cjs,mjs,js,jsx,ts,tsx,json,md}': [command]
+  }
+  fs.writeFileSync('./package.json', JSON.stringify(packageJson, null, 2))
 
   if (config.husky) {
     await exec({
-      command: "npx husky add .husky/pre-commit \"npx lint-staged\"",
-      errorMessage: "Could not add lint-staged to pre-commit hook",
-    });
+      command: 'npx husky add .husky/pre-commit "npx lint-staged"',
+      errorMessage: 'Could not add lint-staged to pre-commit hook'
+    })
   }
 
-  stopLoading();
-  logSuccess("Installed lint-staged");
+  stopLoading()
+  logSuccess('Installed lint-staged')
 }
 
 const installTest = async () => {
-  if (config.test === "jest") {
+  if (config.test === 'jest') {
     const commands = {
-      npm: "npm init jest@latest",
-      pnpm: "pnpm create jest@latest",
-      yarn: "yarn create jest@latest"
+      npm: 'npm init jest@latest',
+      pnpm: 'pnpm create jest@latest',
+      yarn: 'yarn create jest@latest'
     }
-    await spawn({ command: commands[config.packageManager], errorMessage: "Could not install Jest"});
-  } else if (config.test === "jasmine") {
-    startLoading("Installing Jasmine");
+    await spawn({ command: commands[config.packageManager], errorMessage: 'Could not install Jest' })
+  } else if (config.test === 'jasmine') {
+    startLoading('Installing Jasmine')
     await exec({
-      command: installCommand({ 
-        name: config.env === "node" ? "jasmine" : "jasmine-browser-runner jasmine-core",
-        isDev: true, 
-        packageManager: config.packageManager 
+      command: installCommand({
+        name: config.env === 'node' ? 'jasmine' : 'jasmine-browser-runner jasmine-core',
+        isDev: true,
+        packageManager: config.packageManager
       }),
-      errorMessage: "Could not install Jasmine",
-    });
+      errorMessage: 'Could not install Jasmine'
+    })
 
     await exec({
-      command: config.env === "node" ? "npx jasmine init" : "npx jasmine-browser-runner init",
-      errorMessage: "Could not init Jasmine",
-    });
+      command: config.env === 'node' ? 'npx jasmine init' : 'npx jasmine-browser-runner init',
+      errorMessage: 'Could not init Jasmine'
+    })
 
-    const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
-    packageJson.scripts.test = config.env === "node" ? "jasmine" : "jasmine-browser-runner runSpecs";
-    fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
-    stopLoading();
-  } else if (config.test === "cypress") {
-    startLoading("Installing cypress");
+    const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf-8'))
+    packageJson.scripts.test = config.env === 'node' ? 'jasmine' : 'jasmine-browser-runner runSpecs'
+    fs.writeFileSync('./package.json', JSON.stringify(packageJson, null, 2))
+    stopLoading()
+  } else if (config.test === 'cypress') {
+    startLoading('Installing cypress')
     await exec({
-      command: installCommand({ name: "cypress", isDev: true, packageManager: config.packageManager }),
-      errorMessage: "Could not install Cypress",
-    });
+      command: installCommand({ name: 'cypress', isDev: true, packageManager: config.packageManager }),
+      errorMessage: 'Could not install Cypress'
+    })
 
-    const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
-    packageJson.scripts["cypress:open"] = "cypress open";
-    packageJson.scripts["test"] = "cypress run";
-    fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
-    stopLoading();
-  } else if (config.test === "playwright") {
+    const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf-8'))
+    packageJson.scripts['cypress:open'] = 'cypress open'
+    packageJson.scripts.test = 'cypress run'
+    fs.writeFileSync('./package.json', JSON.stringify(packageJson, null, 2))
+    stopLoading()
+  } else if (config.test === 'playwright') {
     const commands = {
-      npm: "npm init playwright@latest",
-      pnpm: "pnpm create playwright@latest",
-      yarn: "yarn create playwright@latest"
+      npm: 'npm init playwright@latest',
+      pnpm: 'pnpm create playwright@latest',
+      yarn: 'yarn create playwright@latest'
     }
-    await spawn({ command: commands[config.packageManager], errorMessage: "Could not install Playwright"});
+    await spawn({ command: commands[config.packageManager], errorMessage: 'Could not install Playwright' })
 
-    const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
-    packageJson.scripts["test"] = "npx playwright test";
-    packageJson.scripts["codegen"] = "npx playwright codegen";
-    fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
+    const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf-8'))
+    packageJson.scripts.test = 'npx playwright test'
+    packageJson.scripts.codegen = 'npx playwright codegen'
+    fs.writeFileSync('./package.json', JSON.stringify(packageJson, null, 2))
   }
 
-  logSuccess(`Installed ${config.test}`);
+  logSuccess(`Installed ${config.test}`)
 }
 
 const kickstart = async () => {
-  await checkForPackageJson();
-  await checkForGit();
-  if (config.changelog) await createChangelog();
-  if (config.commitizen) await installCommitizen();
-  if (config.readme) await createReadme();
-  if (config.gitignore) await createGitIgnore();
-  if (config.husky) await installHusky();
-  if (config.language === "ts") await installTypeScript();
-  configureNode();
-  if (config.css) await installCss();
-  if (config.lint) await installLint();
-  if (config?.eslint?.integratePrettier || config.format) await installPrettier();
-  if (config.lintStaged && (config.format === "prettier" || ["eslint", "standardjs"].includes(config.lint))) {
-    await installLintStaged();
+  await checkForPackageJson()
+  await checkForGit()
+  if (config.changelog) await createChangelog()
+  if (config.commitizen) await installCommitizen()
+  if (config.readme) await createReadme()
+  if (config.gitignore) await createGitIgnore()
+  if (config.husky) await installHusky()
+  if (config.language === 'ts') await installTypeScript()
+  configureNode()
+  if (config.css) await installCss()
+  if (config.lint) await installLint()
+  if (config?.eslint?.integratePrettier || config.format) await installPrettier()
+  if (config.lintStaged && (config.format === 'prettier' || ['eslint', 'standardjs'].includes(config.lint))) {
+    await installLintStaged()
   }
-  if (config.test) await installTest();
-};
+  if (config.test) await installTest()
+}
 
 export {
-  kickstart,
+  kickstart
 }

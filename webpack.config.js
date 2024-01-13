@@ -1,21 +1,21 @@
-import path from "path";
-import { fileURLToPath } from "url";
-import webpack from "webpack";
+import path from 'path'
+import { fileURLToPath } from 'url'
+import webpack from 'webpack'
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 export default {
-  entry: "./src/main.js",
+  entry: './src/main.js',
   output: {
     path: `${path.resolve(__dirname)}/dist`,
-    filename: "bundle.cjs",
+    filename: 'bundle.cjs'
   },
   plugins: [
-    new webpack.BannerPlugin({ banner: "#!/usr/bin/env node", raw: true }),
+    new webpack.BannerPlugin({ banner: '#!/usr/bin/env node', raw: true })
   ],
-  target: "node",
+  target: 'node',
   optimization: {
-    minimize: true,
-  },
-};
+    minimize: true
+  }
+}

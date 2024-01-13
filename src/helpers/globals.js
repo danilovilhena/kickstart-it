@@ -1,29 +1,29 @@
-const acceptedArgs = ["config"];
-const args = {};
+const acceptedArgs = ['config']
+const args = {}
 
 const defaultConfig = {
-  changelog: "keepAChangelog", // "keepAChangelog" | "conventionalChangelog" | false
-  commitizen: false, // true | false (only used if changelog is "conventionalChangelog")
-  readme: true, // true | false
-  gitignore: true, // true | false
-  husky: true, // true | false
-  language: "js", // "js" | "ts"
-  type: "cjs", // "cjs" | "esm"
-  env: "node", // "node" | "browser"
-  css: false, // false | "sass" | "tailwind" | "mui"
-  lint: "eslint", // "eslint" | "standardjs" | false
+  changelog: 'keepAChangelog',
+  commitizen: false,
+  readme: true,
+  gitignore: true,
+  husky: true,
+  language: 'js',
+  type: 'cjs',
+  env: 'node',
+  css: false,
+  lint: 'eslint',
   eslint: {
-    integratePrettier: false, // true | false
-    configuration: "standard", // "standard" | "airbnb" | "google" | "recommended"
+    integratePrettier: false,
+    configuration: 'standard'
   },
-  format: "prettier", // "prettier" | false (not needed if integratePrettier is true)
-  lintStaged: true, // true | false
-  test: "jest", // "jest" | "jasmine" | "cypress" | "playwright" | false
-  packageManager: "npm", // "npm" | "yarn" | "pnpm"
-};
+  format: 'prettier',
+  lintStaged: true,
+  test: 'jest',
+  packageManager: 'npm'
+}
 
 export {
   args,
   acceptedArgs,
-  defaultConfig,
+  defaultConfig
 }
