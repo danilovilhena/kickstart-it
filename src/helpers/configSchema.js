@@ -28,10 +28,7 @@ const configSchema = {
 
 const validateSchema = (config) => {
   const extraKeys = Object.keys(config).filter((key) => !Object.keys(configSchema).includes(key))
-  if (extraKeys.length > 0) {
-    logError(`Invalid keys in config: ${extraKeys.join(', ')}`)
-    process.exit(1)
-  }
+  if (extraKeys.length > 0) logError(`Invalid keys in config: ${extraKeys.join(', ')}`)
 
   Object.keys(config).forEach((key) => {
     const value = config[key]
@@ -42,16 +39,10 @@ const validateSchema = (config) => {
         const nestedValue = value[nestedKey]
         const nestedSchema = schema[nestedKey]
 
-        if (!nestedSchema.includes(nestedValue)) {
-          logError(`Invalid value for ${key}.${nestedKey}: ${nestedValue}`)
-          process.exit(1)
-        }
+        if (!nestedSchema.includes(nestedValue)) logError(`Invalid value for ${key}.${nestedKey}: ${nestedValue}`)
       })
     } else {
-      if (!schema.includes(value)) {
-        logError(`Invalid value for ${key}: ${value}`)
-        process.exit(1)
-      }
+      if (!schema.includes(value)) logError(`Invalid value for ${key}: ${value}`)
     }
   })
 }

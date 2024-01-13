@@ -43,7 +43,6 @@ const spawn = async ({ command, errorMessage }) => {
     await innerSpawn({ command, errorMessage })
   } catch (error) {
     logError(errorMessage)
-    process.exit(1)
   }
 }
 
