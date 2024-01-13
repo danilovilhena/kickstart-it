@@ -70,10 +70,21 @@ const parseArgs = (originalArgs) => {
 
 const formatTime = (time) => {
   const seconds = Math.round(time / 1000)
-  const minutes = Math.round(seconds / 60)
+  const minutes = Math.floor(seconds / 60)
+  const remainingSeconds = seconds % 60
 
-  if (minutes > 0) return `${minutes} and ${seconds % 60} seconds`
-  return `${seconds} seconds`
+  let str = ''
+
+  if (minutes > 0) str += `${minutes} minute${minutes > 1 ? 's' : ''}`
+
+  if (remainingSeconds > 0) {
+    if (minutes > 0) str += ' and '
+    str += `${remainingSeconds} second${remainingSeconds > 1 ? 's' : ''}`
+  }
+
+  if (str === '') str = '0 seconds'
+
+  return str
 }
 
 export {
