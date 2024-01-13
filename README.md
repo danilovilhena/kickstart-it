@@ -3,7 +3,6 @@
 
 ![npm](https://img.shields.io/npm/v/kickstart-it)
 ![npm](https://img.shields.io/npm/dt/kickstart-it)
-![Coverage](https://img.shields.io/codecov/c/github/danilovilhena/kickstart-it)
 ![node-current](https://img.shields.io/node/v/kickstart-it)
 
 ![Kickstart demonstration](https://github.com/danilovilhena/kickstart-it/assets/54288190/3432eb44-a96c-4431-a87c-476e257a02f3)
