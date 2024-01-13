@@ -1,0 +1,30 @@
+name: Pull Request Checks
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  check-pull-request:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+
+    - name: Check if version exists on NPM
+      run: |
+        PACKAGE_VERSION=$(node -p "require('./package.json').version")
+        if npm view your-package-name@$PACKAGE_VERSION; then
+          echo "Version $PACKAGE_VERSION is already published on NPM."
+          exit 1
+        fi
+  
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run tests
+      run: npm test
