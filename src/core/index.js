@@ -392,7 +392,7 @@ const kickstart = async () => {
   if (config.gitignore) await createGitIgnore()
   if (config.husky) await installHusky()
   if (config.language === 'ts') await installTypeScript()
-  configureNode()
+  if (config.type) configureNode()
   if (config.css) await installCss()
   if (config.lint) await installLint()
   if (config?.eslint?.integratePrettier || config.format) await installPrettier()

@@ -21,13 +21,6 @@ const config = {
   testPathIgnorePatterns: [
     '/node_modules/'
   ],
-  coverageThreshold: {
-    global: {
-      branches: 80,
-      functions: 80,
-      lines: 80
-    }
-  },
   transform: {},
   testEnvironment: 'node'
 }

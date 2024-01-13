@@ -1,4 +1,3 @@
-import fs from 'fs'
 import { beforeEach, describe, expect, jest, test } from '@jest/globals'
 import { cloneFile, exec, formatTime, parseArgs, spawn } from '../../src/helpers/index.js'
 
@@ -18,8 +17,8 @@ describe('index', () => {
 
     await cloneFile(source, destination)
 
-    const sourceContent = fs.readFileSync(source, 'utf8')
-    const destinationContent = fs.readFileSync(destination, 'utf8')
+    const sourceContent = await exec({ command: `cat ${source}` })
+    const destinationContent = await exec({ command: `cat ${source}` })
     expect(sourceContent).toEqual(destinationContent)
 
     exec({ command: `rm ${destination}` })

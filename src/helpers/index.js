@@ -19,7 +19,7 @@ const cloneFile = async (source, destination) => {
   })
 }
 
-const exec = async ({ command, errorMessage }) => {
+const exec = async ({ command, errorMessage = '' }) => {
   try {
     return await promiseExec(command)
   } catch (error) {
@@ -49,8 +49,8 @@ const spawn = async ({ command, errorMessage }) => {
 const clearUndefined = () => {
   const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'))
 
-  if (packageJson.devDependencies?.undefined) delete packageJson.devDependencies.undefined
-  if (packageJson.dependencies?.undefined) delete packageJson.dependencies.undefined
+  if (packageJson?.devDependencies?.undefined) delete packageJson.devDependencies.undefined
+  if (packageJson?.dependencies?.undefined) delete packageJson.dependencies.undefined
 
   fs.writeFileSync('./package.json', JSON.stringify(packageJson, null, 2))
 }
