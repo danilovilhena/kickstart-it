@@ -58,7 +58,7 @@ const promptValues = {
     ],
   },
   env: {
-    message: "Where is the type of your project?",
+    message: "Where will your project run?",
     choices: [
       { name: "Node.js", value: "node" },
       { name: "Browser", value: "browser" }
