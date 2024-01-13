@@ -23,7 +23,11 @@
     "start",
     "project",
     "starter",
-    "scaffolding"
+    "scaffolding",
+    "node",
+    "nodejs",
+    "browser",
+    "init"
   ],
   "author": "Danilo Vilhena",
   "license": "MIT",
