@@ -13,7 +13,9 @@ In less than a minute and just answering questions, you're able to setup:
 ✅ README, Changelog, Commitizen and .gitignore<br>
 ✅ Husky and lint-staged<br>
 ✅ Linter (ESLint or StandardJS) and formatter (Prettier)<br>
-✅ CSS frameworks (Tailwind, Sass or Material UI) and testing frameworks (Jest, Jasmine, Cypress or Playwright)
+✅ CSS frameworks (Tailwind, Sass or Material UI)
+✅ Unit testing frameworks (Jest or Jasmine)
+✅ End-To-End testing frameworks (Cypress or Playwright)
 
 **It's all 100% customizable! 🎉**
 
