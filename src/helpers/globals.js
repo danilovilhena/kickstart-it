@@ -18,7 +18,8 @@ const defaultConfig = {
   },
   format: "prettier", // "prettier" | false (not needed if integratePrettier is true)
   lintStaged: true, // true | false
-  test: "jest", // "jest" | "jasmine" | "cypress" | "playwright" | false
+  unitTest: "jest", // "jest" | "jasmine" | false
+  e2eTest: false, //  "cypress" | "playwright" | false
   packageManager: "npm", // "npm" | "yarn" | "pnpm"
 };
 
