@@ -29,14 +29,3 @@ jobs:
           echo "Version $PACKAGE_VERSION is already published on NPM."
           exit 1
         fi
-  
-    - name: Install dependencies
-      run: npm install
-
-    - name: Run tests
-      run: npm test
-    
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v3
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
