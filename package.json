@@ -44,6 +44,8 @@
     "@webpack-cli/generators": "^3.0.7",
     "eslint": "^8.56.0",
     "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-json": "^3.1.0",
     "husky": "^8.0.0",
