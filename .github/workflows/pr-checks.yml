@@ -10,6 +10,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Check if PR comes from develop
+      run: |
+        if [[ ${{ github.head_ref }} != "develop" ]]; then
+          echo "Pull request must come from develop branch."
+          exit 1
+        fi
+
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
@@ -22,9 +29,3 @@ jobs:
           echo "Version $PACKAGE_VERSION is already published on NPM."
           exit 1
         fi
-  
-    - name: Install dependencies
-      run: npm install
-
-    - name: Run tests
-      run: npm test

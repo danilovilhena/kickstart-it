@@ -4,9 +4,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 ### Added
 
+## [1.2.0] - 2024-01-13
+### Added
+- Jest testing
+
 ## [1.1.1] - 2024-01-13
 ### Changed
 - ESLint to StandardJS
+- Split unit and E2E tests
+
+### Fixed
+- pnpm initialization
+- Grammar issue in "type" prompt
+
 
 ## [1.1.0] - 2024-01-13
 ### Added
