@@ -1,6 +1,6 @@
 {
   "name": "kickstart-it",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "🚀 The fast way to setup your projects!",
   "bin": {
     "kickstart-it": "./dist/bundle.cjs"
