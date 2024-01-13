@@ -1,3 +1,6 @@
+const acceptedArgs = ["config"];
+const args = {};
+
 const defaultConfig = {
   changelog: "keepAChangelog", // "keepAChangelog" | "conventionalChangelog" | false
   commitizen: false, // true | false (only used if changelog is "conventionalChangelog")
@@ -7,7 +10,6 @@ const defaultConfig = {
   language: "js", // "js" | "ts"
   type: "cjs", // "cjs" | "esm"
   env: "node", // "node" | "browser"
-
   css: false, // false | "sass" | "tailwind" | "mui"
   lint: "eslint", // "eslint" | "standardjs" | false
   eslint: {
@@ -18,10 +20,10 @@ const defaultConfig = {
   lintStaged: true, // true | false
   test: "jest", // "jest" | "jasmine" | "cypress" | "playwright" | false
   packageManager: "npm", // "npm" | "yarn" | "pnpm"
-  // TODO: add this in the future
-  // bundler: "webpack", // "webpack" | "rollup" | "vite" | "parcel" | false
-  // integrateBabel: false, // true | false
-  // ci: "githubActions", // "githubActions" | "gitlabCI" | "circleCI" | "travisCI" | "jenkins" | false
 };
 
-export default defaultConfig;
+export {
+  args,
+  acceptedArgs,
+  defaultConfig,
+}

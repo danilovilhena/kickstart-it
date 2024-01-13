@@ -13,6 +13,7 @@ const logSuccess = (message, showCheckmark = true) => {
 
 const logError = (message) => {
   console.error(chalk.red(`[ERROR] ${message}`));
+  process.exit(1);
 }
 
 const startLoading = (message) => {

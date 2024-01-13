@@ -4,6 +4,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [Unreleased]
 ### Added
 
+## [1.1.0] - 2024-01-13
+### Added
+- Support for `--config` flag
+- Validation for args and config file
+- More helper functions
+
+### Changed
+- Organize prompts and globals
+
 ## [1.0.3] - 2024-01-12
 ### Added
 - Github Actions (for pull request checks, build and publish)

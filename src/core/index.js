@@ -298,11 +298,14 @@ const installLintStaged = async () => {
     errorMessage: "Could not install lint-staged",
   });
 
+  let command;
+  if (config.format === "prettier") command = "prettier --write";
+  else if (config.lint === "eslint") command = "eslint . --ext .js,.jsx,.ts,.tsx --fix";
+  else if (config.lint === "standardjs") command = "standard --fix";
+
   const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf-8"));
   packageJson["lint-staged"] = {
-    "*.{cjs,mjs,js,jsx,ts,tsx,json,md}": [
-      "prettier --write",
-    ],
+    "*.{cjs,mjs,js,jsx,ts,tsx,json,md}": [ command ],
   };
   fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
 
@@ -387,7 +390,9 @@ const kickstart = async () => {
   if (config.css) await installCss();
   if (config.lint) await installLint();
   if (config?.eslint?.integratePrettier || config.format) await installPrettier();
-  if (config.lintStaged) await installLintStaged();
+  if (config.lintStaged && (config.format === "prettier" || ["eslint", "standardjs"].includes(config.lint))) {
+    await installLintStaged();
+  }
   if (config.test) await installTest();
 };
 

@@ -1,7 +1,7 @@
 {
   "name": "kickstart-it",
-  "version": "1.0.3",
-  "description": "🚀 The fast way to setup your projects!",
+  "version": "1.1.0",
+  "description": "🚀 The fastest way to setup your projects!",
   "bin": {
     "kickstart-it": "./dist/bundle.cjs"
   },
@@ -23,7 +23,11 @@
     "start",
     "project",
     "starter",
-    "scaffolding"
+    "scaffolding",
+    "node",
+    "nodejs",
+    "browser",
+    "init"
   ],
   "author": "Danilo Vilhena",
   "license": "MIT",

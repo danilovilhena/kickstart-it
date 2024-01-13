@@ -2,6 +2,7 @@ import fs from "fs";
 import { promisify } from "util";
 import { exec as originalExec, spawn as originalSpawn } from "child_process";
 import { logError } from "./logger.js";
+import { acceptedArgs, args } from "./globals.js";
 
 const promiseExec = promisify(originalExec);
 
@@ -23,7 +24,6 @@ const exec = async ({ command, errorMessage }) => {
     return await promiseExec(command);
   } catch (error) {
     logError(errorMessage);
-    process.exit(1);
   }
 }
 
@@ -56,9 +56,32 @@ const clearUndefined = () => {
   fs.writeFileSync("./package.json", JSON.stringify(packageJson, null, 2));
 }
 
+const parseArgs = (originalArgs) => {
+  originalArgs.forEach((arg) => {
+    const [key, value] = arg.split("=");
+    const sanitizedKey = key.replace(/-/g, "");
+
+    if (!acceptedArgs.includes(sanitizedKey)) {
+      logError(`Invalid argument: ${key}`);
+    }
+
+    args[sanitizedKey] = value;
+  });
+}
+
+const formatTime = (time) => {
+  const seconds = Math.round(time / 1000);
+  const minutes = Math.round(seconds / 60);
+
+  if (minutes > 0) return `${minutes} and ${seconds % 60} seconds`;
+  return `${seconds} seconds`;
+}
+
 export {
   clearUndefined,
   cloneFile,
   exec,
+  formatTime,
   spawn,
+  parseArgs,
 }
