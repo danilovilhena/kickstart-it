@@ -141,16 +141,16 @@ let originalConfig
 
 const prompt = async (name, returnValue = false) => {
   const { message, choices } = promptValues[name]
-  const { answer } = await inquirer.prompt({
+  const { [name]: result } = await inquirer.prompt({
     type: 'list',
     prefix: `${chalk.magenta('?')}`,
-    name: 'answer',
+    name,
     message,
     choices
   })
 
-  if (returnValue) return answer
-  config[name] = answer
+  if (returnValue) return result
+  config[name] = result
 }
 
 const config = { ...defaultConfig }
@@ -187,7 +187,7 @@ const buildConfig = async () => {
     config.eslint.integratePrettier = await prompt('integratePrettier', true)
     config.eslint.configuration = await prompt('configuration', true)
   }
-  if (!config.eslint.integratePrettier) await prompt('format')
+  if (!config?.eslint?.integratePrettier) await prompt('format')
   if (config.format === 'prettier' || ['eslint', 'standardjs'].includes(config.lint)) await prompt('lintStaged')
 
   await prompt('unitTest')

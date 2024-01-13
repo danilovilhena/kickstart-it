@@ -19,7 +19,7 @@ const cloneFile = async (source, destination) => {
   })
 }
 
-const exec = async ({ command, errorMessage }) => {
+const exec = async ({ command, errorMessage = '' }) => {
   try {
     return await promiseExec(command)
   } catch (error) {
@@ -43,15 +43,14 @@ const spawn = async ({ command, errorMessage }) => {
     await innerSpawn({ command, errorMessage })
   } catch (error) {
     logError(errorMessage)
-    process.exit(1)
   }
 }
 
 const clearUndefined = () => {
   const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'))
 
-  if (packageJson.devDependencies?.undefined) delete packageJson.devDependencies.undefined
-  if (packageJson.dependencies?.undefined) delete packageJson.dependencies.undefined
+  if (packageJson?.devDependencies?.undefined) delete packageJson.devDependencies.undefined
+  if (packageJson?.dependencies?.undefined) delete packageJson.dependencies.undefined
 
   fs.writeFileSync('./package.json', JSON.stringify(packageJson, null, 2))
 }
@@ -71,10 +70,21 @@ const parseArgs = (originalArgs) => {
 
 const formatTime = (time) => {
   const seconds = Math.round(time / 1000)
-  const minutes = Math.round(seconds / 60)
+  const minutes = Math.floor(seconds / 60)
+  const remainingSeconds = seconds % 60
 
-  if (minutes > 0) return `${minutes} and ${seconds % 60} seconds`
-  return `${seconds} seconds`
+  let str = ''
+
+  if (minutes > 0) str += `${minutes} minute${minutes > 1 ? 's' : ''}`
+
+  if (remainingSeconds > 0) {
+    if (minutes > 0) str += ' and '
+    str += `${remainingSeconds} second${remainingSeconds > 1 ? 's' : ''}`
+  }
+
+  if (str === '') str = '0 seconds'
+
+  return str
 }
 
 export {
