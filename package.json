@@ -11,7 +11,8 @@
     "lint": "eslint . --ext .js",
     "lint-fix": "eslint . --ext .js --fix",
     "prepare": "husky install",
-    "prepublish": "npm run build"
+    "prepublish": "npm run build",
+    "test": ""
   },
   "repository": {
     "type": "git",
