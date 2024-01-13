@@ -12,7 +12,7 @@
     "lint-fix": "standard --fix",
     "prepare": "husky install",
     "prepublish": "npm run build",
-    "test": "jest"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "repository": {
     "type": "git",
@@ -41,6 +41,7 @@
     "ora": "^8.0.1"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
     "husky": "^8.0.0",
     "jest": "^29.7.0",
     "standard": "^17.1.0",

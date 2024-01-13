@@ -1,7 +1,7 @@
 /** @type {import('jest').Config} */
 const config = {
   verbose: true,
-  silent: true,
+  silent: false,
   moduleFileExtensions: [
     'js',
     'json'
@@ -27,7 +27,9 @@ const config = {
       functions: 80,
       lines: 80
     }
-  }
+  },
+  transform: {},
+  testEnvironment: 'node'
 }
 
 export default config
