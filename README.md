@@ -1,5 +1,5 @@
 # 🚀 Kickstart
-**The fast way to setup your Javascript projects!**
+**The fastest way to setup your Javascript projects!**
 
 ![Kickstart demonstration](https://github.com/danilovilhena/kickstart-it/assets/54288190/3432eb44-a96c-4431-a87c-476e257a02f3)
 
@@ -23,10 +23,37 @@ npm install -g kickstart-it
 
 In a new project folder (it can have git initialized or package.json already, but if it doesn't kickstart will create it), run the command:
 ```sh
-kickstart-it
+kickstart-it [--config=<path-to-file>]
 ```
 
-Then, just answer the prompted questions and your project will be setup.
+### Flags
+
+- `--config`: use a config file (check the next section) 
+
+### Configuration
+The config file must be in JSON. It can have the following properties:
+
+> P.S.: You don't have to add all of them, just include the ones you need! All `false` or missing properties, won't be initialized.
+
+| Property | Values | Note |
+| -------- | ------ | ----------- |
+| `changelog` | "keepAChangelog", "conventionalChangelog", false  | |
+| `commitizen` | true, false | Only used if `changelog` is "conventionalChangelog" |
+| `readme` | true, false | |
+| `gitignore` | true, false | |
+| `husky` | true, false | |
+| `language` | "js", "ts" | |
+| `type` | "cjs", "esm" | |
+| `env` | "node", "browser" | |
+| `css` | "sass", "tailwind", "mui", false | |
+| `lint` | "eslint", "standardjs", false | |
+| `eslint.integratePrettier` | true, false | Only used if `lint` is set to "eslint" |
+| `eslint.configuration` | true, false | Only used if `lint` is set to "eslint"  |
+| `format` | "prettier", false | If `eslint.integratePrettier` is set, this is unnecessary |
+| `lintStaged` | true, false | Only available if `lint` or `prettier` is set |
+| `test` | "jest", "jasmine", "cypress", "playwright", false | |
+| `packageManager` | "npm", "yarn", "pnpm" | |
+
 
 ## 💬 Support
 Having trouble? Please email me at danilo.vilhena@gmail.com
@@ -37,7 +64,6 @@ Having trouble? Please email me at danilo.vilhena@gmail.com
 
 ## 🛣️ Roadmap
 
-- `--config` flag to allow reuse of configuration
 - `--lang` flag to prompt questions in different language
 - Support to non-interactive terminals
 - Automated tests 😆
