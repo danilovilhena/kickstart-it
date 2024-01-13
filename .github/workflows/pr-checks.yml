@@ -12,7 +12,7 @@ jobs:
 
     - name: Check if PR comes from develop
       run: |
-        if [[ ${{ github.event.pull_request.base.ref }} != "develop" ]]; then
+        if [[ ${{ github.head_ref }} != "develop" ]]; then
           echo "Pull request must come from develop branch."
           exit 1
         fi
