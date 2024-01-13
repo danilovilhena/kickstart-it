@@ -18,7 +18,8 @@ const defaultConfig = {
   },
   format: 'prettier',
   lintStaged: true,
-  test: 'jest',
+  unitTest: 'jest',
+  e2eTest: false,
   packageManager: 'npm'
 }
 

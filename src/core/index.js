@@ -26,6 +26,8 @@ const checkForPackageJson = async () => {
   logWarning(`No package.json found. Creating one with ${packageManager}!`)
 
   const platform = os.platform()
+  let initCommand = `${packageManager} init`
+  if (packageManager !== 'pnpm') initCommand += ' -y'
 
   await exec({
     command: `${platform === 'win32' ? 'where' : 'which'} ${packageManager}`,
@@ -33,7 +35,7 @@ const checkForPackageJson = async () => {
   })
 
   await exec({
-    command: `${packageManager} init -y`,
+    command: initCommand,
     errorMessage: 'Could not create package.json'
   })
 
@@ -318,15 +320,15 @@ const installLintStaged = async () => {
   logSuccess('Installed lint-staged')
 }
 
-const installTest = async () => {
-  if (config.test === 'jest') {
+const installUnitTest = async () => {
+  if (config.unitTest === 'jest') {
     const commands = {
       npm: 'npm init jest@latest',
       pnpm: 'pnpm create jest@latest',
       yarn: 'yarn create jest@latest'
     }
     await spawn({ command: commands[config.packageManager], errorMessage: 'Could not install Jest' })
-  } else if (config.test === 'jasmine') {
+  } else if (config.unitTest === 'jasmine') {
     startLoading('Installing Jasmine')
     await exec({
       command: installCommand({
@@ -346,7 +348,13 @@ const installTest = async () => {
     packageJson.scripts.test = config.env === 'node' ? 'jasmine' : 'jasmine-browser-runner runSpecs'
     fs.writeFileSync('./package.json', JSON.stringify(packageJson, null, 2))
     stopLoading()
-  } else if (config.test === 'cypress') {
+  }
+
+  logSuccess(`Installed ${config.unitTest}`)
+}
+
+const installE2eTest = async () => {
+  if (config.e2eTest === 'cypress') {
     startLoading('Installing cypress')
     await exec({
       command: installCommand({ name: 'cypress', isDev: true, packageManager: config.packageManager }),
@@ -358,7 +366,7 @@ const installTest = async () => {
     packageJson.scripts.test = 'cypress run'
     fs.writeFileSync('./package.json', JSON.stringify(packageJson, null, 2))
     stopLoading()
-  } else if (config.test === 'playwright') {
+  } else if (config.e2eTest === 'playwright') {
     const commands = {
       npm: 'npm init playwright@latest',
       pnpm: 'pnpm create playwright@latest',
@@ -372,7 +380,7 @@ const installTest = async () => {
     fs.writeFileSync('./package.json', JSON.stringify(packageJson, null, 2))
   }
 
-  logSuccess(`Installed ${config.test}`)
+  logSuccess(`Installed ${config.e2eTest}`)
 }
 
 const kickstart = async () => {
@@ -391,7 +399,8 @@ const kickstart = async () => {
   if (config.lintStaged && (config.format === 'prettier' || ['eslint', 'standardjs'].includes(config.lint))) {
     await installLintStaged()
   }
-  if (config.test) await installTest()
+  if (config.unitTest) await installUnitTest()
+  if (config.e2eTest) await installE2eTest()
 }
 
 export {
