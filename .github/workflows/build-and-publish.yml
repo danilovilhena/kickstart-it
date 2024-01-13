@@ -11,6 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
+      - name: Config global user
+        run: |
+          git config --global user.name 'Danilo Vilhena'
+          git config --global user.email 'danilovilhena@gmail.com'
+      
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
