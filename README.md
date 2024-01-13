@@ -51,7 +51,8 @@ The config file must be in JSON. It can have the following properties:
 | `eslint.configuration` | true, false | Only used if `lint` is set to "eslint"  |
 | `format` | "prettier", false | If `eslint.integratePrettier` is set, this is unnecessary |
 | `lintStaged` | true, false | Only available if `lint` or `prettier` is set |
-| `test` | "jest", "jasmine", "cypress", "playwright", false | |
+| `unitTest` | "jest", "jasmine", false | |
+| `e2eTest` | "cypress", "playwright", false | |
 | `packageManager` | "npm", "yarn", "pnpm" | |
 
 

@@ -21,7 +21,8 @@ const configSchema = {
   },
   format: ["prettier", false],
   lintStaged: [true, false],
-  test: ["jest", "jasmine", "cypress", "playwright", false],
+  unitTest: ["jest", "jasmine", false],
+  e2eTest: ["cypress", "playwright", false],
   packageManager: ["npm", "yarn", "pnpm"],
 };
 

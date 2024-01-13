@@ -111,11 +111,17 @@ const promptValues = {
       { name: "No", value: false }
     ],
   },
-  test: {
-    message: "Would you like to use a testing framework?",
+  unitTest: {
+    message: "Would you like to use a unit testing framework?",
     choices: [
       { name: "Jest", value: "jest" },
       { name: "Jasmine", value: "jasmine" },
+      { name: "No", value: false }
+    ],
+  },
+  e2eTest: {
+    message: "Would you like to use an end-to-end testing framework?",
+    choices: [
       { name: "Cypress", value: "cypress" },
       { name: "Playwright", value: "playwright" },
       { name: "No", value: false }
@@ -184,7 +190,8 @@ const buildConfig = async () => {
   if (!config.eslint.integratePrettier) await prompt("format");
   if (config.format === "prettier" || ["eslint", "standardjs"].includes(config.lint)) await prompt("lintStaged");
 
-  await prompt("test");
+  await prompt("unitTest");
+  await prompt("e2eTest");
   await prompt("packageManager");
 
   originalConfig = { ...config };
