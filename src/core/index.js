@@ -26,17 +26,13 @@ const checkForOutputDir = async () => {
 
   if (!hasOutputDir) {
     logWarning(`Output directory "${outputDir}" does not exist. Creating it now!`)
-    try {
-      fs.mkdirSync(outputDir)
-    } catch (error) {
+    try { fs.mkdirSync(outputDir) } catch (error) {
       logError(`Could not create output directory ${process.cwd()}`)
     }
     logSuccess(`Created output directory ${process.cwd()}!`)
   }
 
-  try {
-    process.chdir(outputDir)
-  } catch (error) {
+  try { process.chdir(outputDir) } catch (error) {
     logError('Could not enter output directory')
   }
 }
