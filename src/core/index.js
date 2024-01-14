@@ -4,7 +4,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 
 import { cloneFile, exec, spawn } from '../helpers/index.js'
-import { config } from '../helpers/config.js'
+import { config } from '../helpers/globals.js'
 import { logError, logSuccess, logWarning, startLoading, stopLoading } from '../helpers/logger.js'
 
 const __filename = fileURLToPath(import.meta.url)

@@ -23,8 +23,29 @@ const defaultConfig = {
   packageManager: 'npm'
 }
 
+const originalConfig = {}
+const config = {}
+
+const setOriginalConfig = (newConfig) => {
+  Object.assign(originalConfig, newConfig)
+}
+
+const setPartialConfig = (newConfig) => {
+  Object.assign(config, newConfig)
+}
+
+const setFullConfig = (newConfig) => {
+  Object.keys(config).forEach((key) => delete config[key])
+  Object.assign(config, newConfig)
+}
+
 export {
   args,
   acceptedArgs,
-  defaultConfig
+  config,
+  defaultConfig,
+  originalConfig,
+  setOriginalConfig,
+  setPartialConfig,
+  setFullConfig
 }
