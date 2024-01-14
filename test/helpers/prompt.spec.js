@@ -49,7 +49,25 @@ describe('config', () => {
     expect(mockExit).not.toHaveBeenCalled()
     expect(config).toStrictEqual({
       changelog: 'keepAChangelog',
-      commitizen: false
+      commitizen: false,
+      css: false,
+      e2eTest: false,
+      env: 'node',
+      eslint: {
+        configuration: 'standard',
+        integratePrettier: false
+      },
+      format: false,
+      gitignore: false,
+      husky: false,
+      language: 'js',
+      lint: false,
+      lintStaged: false,
+      outputDir: '.',
+      packageManager: 'npm',
+      readme: false,
+      type: 'cjs',
+      unitTest: false
     })
   })
 

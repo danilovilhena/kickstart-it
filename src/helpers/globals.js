@@ -1,4 +1,4 @@
-const acceptedArgs = ['config']
+const acceptedArgs = ['config', 'outputDir']
 const args = {}
 
 const defaultConfig = {
@@ -20,7 +20,31 @@ const defaultConfig = {
   lintStaged: true,
   unitTest: 'jest',
   e2eTest: false,
-  packageManager: 'npm'
+  packageManager: 'npm',
+  outputDir: '.'
+}
+
+const negativeConfig = {
+  changelog: false,
+  commitizen: false,
+  readme: false,
+  gitignore: false,
+  husky: false,
+  language: 'js',
+  type: 'cjs',
+  env: 'node',
+  css: false,
+  lint: false,
+  eslint: {
+    integratePrettier: false,
+    configuration: 'standard'
+  },
+  format: false,
+  lintStaged: false,
+  unitTest: false,
+  e2eTest: false,
+  packageManager: 'npm',
+  outputDir: '.'
 }
 
 const originalConfig = {}
@@ -36,7 +60,7 @@ const setPartialConfig = (newConfig) => {
 
 const setFullConfig = (newConfig) => {
   Object.keys(config).forEach((key) => delete config[key])
-  Object.assign(config, newConfig)
+  Object.assign(config, { ...negativeConfig, ...newConfig })
 }
 
 export {

@@ -36,6 +36,7 @@ kickstart-it [--config=<path-to-file>] [--outputDir=<path-to-directory>]
 
 - `--config`: use a config file (check the next section)
 - `--outputDir`: define the directory to init your project
+  - Should be a path string, i.e. `project`, `./project`, `./dir/project`
   - If it's not created, kickstart will create it
   - If it's not specified here or in the config, the default is current directory
 
@@ -63,7 +64,7 @@ The config file must be in JSON. It can have the following properties:
 | `unitTest` | "jest", "jasmine", false | |
 | `e2eTest` | "cypress", "playwright", false | |
 | `packageManager` | "npm", "yarn", "pnpm" | |
-| `outputDir` | String | |
+| `outputDir` | String | Path strings, i.e. `project`, `./project`, `./dir/project` |
 
 
 ## 💬 Support
