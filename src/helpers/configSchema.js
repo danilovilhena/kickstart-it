@@ -43,11 +43,7 @@ const validateSchema = (config) => {
         if (!nestedSchema.includes(nestedValue)) logError(`Invalid value for ${key}.${nestedKey}: ${nestedValue}`)
       })
     } else if (schema instanceof RegExp) {
-      try {
-        if (!schema.test(value)) logError(`Invalid value for ${key}: ${value}`)
-      } catch (error) {
-        console.error(error)
-      }
+      if (!schema.test(value)) logError(`Invalid value for ${key}: ${value}`)
     } else {
       if (!schema.includes(value)) logError(`Invalid value for ${key}: ${value}`)
     }
