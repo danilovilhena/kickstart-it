@@ -23,7 +23,8 @@ const configSchema = {
   lintStaged: [true, false],
   unitTest: ['jest', 'jasmine', false],
   e2eTest: ['cypress', 'playwright', false],
-  packageManager: ['npm', 'yarn', 'pnpm']
+  packageManager: ['npm', 'yarn', 'pnpm'],
+  outputDir: /^.|(?:\.\/|\.[\w-]+\/)?(?:[\w-]+\/)*[\w-]+\/?$/g
 }
 
 const validateSchema = (config) => {
@@ -41,6 +42,8 @@ const validateSchema = (config) => {
 
         if (!nestedSchema.includes(nestedValue)) logError(`Invalid value for ${key}.${nestedKey}: ${nestedValue}`)
       })
+    } else if (schema instanceof RegExp) {
+      if (!schema.test(value)) logError(`Invalid value for ${key}: ${value}`)
     } else {
       if (!schema.includes(value)) logError(`Invalid value for ${key}: ${value}`)
     }

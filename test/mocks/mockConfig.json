@@ -17,5 +17,6 @@
   "lintStaged": true,
   "unitTest": "jest",
   "e2eTest": false,
-  "packageManager": "npm"
+  "packageManager": "npm",
+  "outputDir": "."
 }

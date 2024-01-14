@@ -4,7 +4,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 
 import { cloneFile, exec, spawn } from '../helpers/index.js'
-import { config } from '../helpers/config.js'
+import { args, config } from '../helpers/globals.js'
 import { logError, logSuccess, logWarning, startLoading, stopLoading } from '../helpers/logger.js'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -16,6 +16,31 @@ const installCommand = ({ name, isGlobal, isDev, packageManager }) => {
     yarn: `yarn ${isGlobal ? 'global ' : ''}add ${name} ${isDev ? '--dev' : ''}`,
     pnpm: `pnpm add ${isGlobal ? '-g' : ''} ${isDev ? '--save-dev' : ''} ${name}`
   }[packageManager]
+}
+
+const hasOutputDirConfig = () => {
+  if (args.outputDir && typeof args.outputDir === 'string') return args.outputDir !== '.'
+  if (config.outputDir && typeof config.outputDir === 'string') return config.outputDir !== '.'
+  return false
+}
+
+const checkForOutputDir = () => {
+  if (!hasOutputDirConfig()) return
+
+  const outputDir = args.outputDir || config.outputDir
+  const hasOutputDir = fs.existsSync(outputDir)
+
+  if (!hasOutputDir) {
+    logWarning(`Output directory "${outputDir}" does not exist. Creating it now!`)
+    try { fs.mkdirSync(outputDir) } catch (error) {
+      logError(`Could not create output directory ${process.cwd()}`)
+    }
+    logSuccess(`Created output directory ${process.cwd()}!`)
+  }
+
+  try { process.chdir(outputDir) } catch (error) {
+    logError('Could not enter output directory')
+  }
 }
 
 const checkForPackageJson = async () => {
@@ -384,6 +409,7 @@ const installE2eTest = async () => {
 }
 
 const kickstart = async () => {
+  checkForOutputDir()
   await checkForPackageJson()
   await checkForGit()
   if (config.changelog) await createChangelog()
@@ -396,9 +422,8 @@ const kickstart = async () => {
   if (config.css) await installCss()
   if (config.lint) await installLint()
   if (config?.eslint?.integratePrettier || config.format) await installPrettier()
-  if (config.lintStaged && (config.format === 'prettier' || ['eslint', 'standardjs'].includes(config.lint))) {
-    await installLintStaged()
-  }
+  if (config.lintStaged && (config.format === 'prettier' ||
+    ['eslint', 'standardjs'].includes(config.lint))) await installLintStaged()
   if (config.unitTest) await installUnitTest()
   if (config.e2eTest) await installE2eTest()
 }

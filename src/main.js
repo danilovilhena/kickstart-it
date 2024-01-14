@@ -3,9 +3,10 @@ import fs from 'fs'
 import chalk from 'chalk'
 import inquirer from 'inquirer'
 import { kickstart } from './core/index.js'
+import { originalConfig } from './helpers/globals.js'
 import { clearUndefined, formatTime, parseArgs } from './helpers/index.js'
-import { originalConfig, buildConfig } from './helpers/config.js'
 import { logSuccess } from './helpers/logger.js'
+import { promptQuestions } from './helpers/prompt.js'
 
 const main = async () => {
   const executionStart = performance.now()
@@ -13,7 +14,7 @@ const main = async () => {
   console.log(`Welcome to ${chalk.bold(chalk.magenta('kickstart-it 🚀'))}, the ${chalk.underline('fastest way')} to setup your projects!`)
   console.log("Let's get started...")
 
-  await buildConfig()
+  await promptQuestions()
   await kickstart()
   clearUndefined()
 
