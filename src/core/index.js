@@ -18,8 +18,14 @@ const installCommand = ({ name, isGlobal, isDev, packageManager }) => {
   }[packageManager]
 }
 
-const checkForOutputDir = async () => {
-  if (config?.outputDir !== '.' && args?.outputDir !== '.') return
+const hasOutputDirConfig = () => {
+  if (args.outputDir && typeof args.outputDir === 'string') return args.outputDir !== '.'
+  if (config.outputDir && typeof config.outputDir === 'string') return config.outputDir !== '.'
+  return false
+}
+
+const checkForOutputDir = () => {
+  if (!hasOutputDirConfig()) return
 
   const outputDir = args.outputDir || config.outputDir
   const hasOutputDir = fs.existsSync(outputDir)
@@ -403,7 +409,7 @@ const installE2eTest = async () => {
 }
 
 const kickstart = async () => {
-  await checkForOutputDir()
+  checkForOutputDir()
   await checkForPackageJson()
   await checkForGit()
   if (config.changelog) await createChangelog()
