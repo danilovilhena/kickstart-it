@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, jest, test } from '@jest/globals'
 import inquirer from 'inquirer'
-import { buildConfig } from '../../src/helpers/config.js'
-import { args } from '../../src/helpers/globals.js'
+import { promptQuestions } from '../../src/helpers/prompt.js'
+import { args, config } from '../../src/helpers/globals.js'
 
 jest.mock('inquirer', () => ({
   prompt: jest.fn()
@@ -32,47 +32,77 @@ const mockPrompts = {
 describe('config', () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    Object.keys(config).forEach((key) => delete config[key])
   })
 
-  test('buildConfig - should parse config file', async () => {
+  test('promptQuestions - should parse config file', async () => {
     args.config = './test/mocks/mockConfig.json'
 
-    await buildConfig().catch(() => {})
+    await promptQuestions().catch(() => {})
     expect(mockExit).not.toHaveBeenCalled()
   })
 
-  test('buildConfig - should exit if config file does not exist', async () => {
+  test('promptQuestions - should parse partial config file', async () => {
+    args.config = './test/mocks/mockPartialConfig.json'
+
+    await promptQuestions().catch(() => {})
+    expect(mockExit).not.toHaveBeenCalled()
+    expect(config).toStrictEqual({
+      changelog: 'keepAChangelog',
+      commitizen: false,
+      css: false,
+      e2eTest: false,
+      env: 'node',
+      eslint: {
+        configuration: 'standard',
+        integratePrettier: false
+      },
+      format: false,
+      gitignore: false,
+      husky: false,
+      language: 'js',
+      lint: false,
+      lintStaged: false,
+      outputDir: '.',
+      packageManager: 'npm',
+      readme: false,
+      type: 'cjs',
+      unitTest: false
+    })
+  })
+
+  test('promptQuestions - should exit if config file does not exist', async () => {
     args.config = './test/nonExisting.json'
 
-    await buildConfig().catch(() => {})
+    await promptQuestions().catch(() => {})
     expect(mockExit).toHaveBeenCalled()
   })
 
-  test('buildConfig - should exit if config file is not a JSON file', async () => {
+  test('promptQuestions - should exit if config file is not a JSON file', async () => {
     args.config = './.gitignore'
 
-    await buildConfig().catch(() => {})
+    await promptQuestions().catch(() => {})
     expect(mockExit).toHaveBeenCalled()
   })
 
-  test('buildConfig - should exit if config file is invalid', async () => {
+  test('promptQuestions - should exit if config file is invalid', async () => {
     args.config = './test/mocks/mockConfigInvalid.json'
 
-    await buildConfig().catch(() => {})
+    await promptQuestions().catch(() => {})
     expect(mockExit).toHaveBeenCalled()
   })
 
-  test('buildConfig - should prompt questions', async () => {
+  test('promptQuestions - should prompt questions', async () => {
     args.config = undefined
     inquirer.prompt = jest.fn().mockImplementation(() => ({ answer: 'answer' }))
 
-    await buildConfig().catch(() => {})
+    await promptQuestions().catch(() => {})
     expect(mockExit).not.toHaveBeenCalled()
 
     inquirer.prompt.mockRestore()
   })
 
-  test('buildConfig - should prompt questions with conventionalChangelog', async () => {
+  test('promptQuestions - should prompt questions with conventionalChangelog', async () => {
     args.config = undefined
     inquirer.prompt = jest.fn().mockImplementation((arg) => {
       const values = {
@@ -83,13 +113,13 @@ describe('config', () => {
       return { [arg.name]: values[arg.name] }
     })
 
-    await buildConfig().catch(() => {})
+    await promptQuestions().catch(() => {})
     expect(mockExit).not.toHaveBeenCalled()
 
     inquirer.prompt.mockRestore()
   })
 
-  test('buildConfig - should prompt questions without integratePrettier', async () => {
+  test('promptQuestions - should prompt questions without integratePrettier', async () => {
     args.config = undefined
     inquirer.prompt = jest.fn().mockImplementation((arg) => {
       const values = {
@@ -100,7 +130,7 @@ describe('config', () => {
       return { [arg.name]: values[arg.name] }
     })
 
-    await buildConfig().catch((error) => {
+    await promptQuestions().catch((error) => {
       console.error(error)
     })
     expect(mockExit).not.toHaveBeenCalled()

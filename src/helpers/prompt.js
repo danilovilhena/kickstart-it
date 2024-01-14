@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import inquirer from 'inquirer'
 import chalk from 'chalk'
-import { args, defaultConfig } from './globals.js'
+import { args, config, setFullConfig, setPartialConfig, setOriginalConfig } from './globals.js'
 import { validateSchema } from './configSchema.js'
 import { logError } from './logger.js'
 
@@ -137,8 +137,6 @@ const promptValues = {
   }
 }
 
-let originalConfig
-
 const prompt = async (name, returnValue = false) => {
   const { message, choices } = promptValues[name]
   const { [name]: result } = await inquirer.prompt({
@@ -150,12 +148,10 @@ const prompt = async (name, returnValue = false) => {
   })
 
   if (returnValue) return result
-  config[name] = result
+  setPartialConfig({ [name]: result })
 }
 
-const config = { ...defaultConfig }
-
-const buildConfig = async () => {
+const promptQuestions = async () => {
   if (args.config) {
     const configPath = path.resolve(process.cwd(), args.config)
 
@@ -165,7 +161,8 @@ const buildConfig = async () => {
     try {
       const parsedConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'))
       validateSchema(parsedConfig)
-      originalConfig = { ...parsedConfig }
+      setFullConfig(parsedConfig)
+      setOriginalConfig(parsedConfig)
       return
     } catch (error) {
       logError('Failed to parse the config file provided!')
@@ -194,11 +191,9 @@ const buildConfig = async () => {
   await prompt('e2eTest')
   await prompt('packageManager')
 
-  originalConfig = { ...config }
+  setOriginalConfig(config)
 }
 
 export {
-  config,
-  originalConfig,
-  buildConfig
+  promptQuestions
 }

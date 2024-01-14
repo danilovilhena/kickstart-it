@@ -12,8 +12,8 @@ In less than a minute and just answering questions, you're able to setup:
 ✅ README, Changelog, Commitizen and .gitignore<br>
 ✅ Husky and lint-staged<br>
 ✅ Linter (ESLint or StandardJS) and formatter (Prettier)<br>
-✅ CSS frameworks (Tailwind, Sass or Material UI)
-✅ Unit testing frameworks (Jest or Jasmine)
+✅ CSS frameworks (Tailwind, Sass or Material UI)<br>
+✅ Unit testing frameworks (Jest or Jasmine)<br>
 ✅ End-To-End testing frameworks (Cypress or Playwright)
 
 **It's all 100% customizable! 🎉**
@@ -29,12 +29,16 @@ npm install -g kickstart-it
 
 In a new project folder (it can have git initialized or package.json already, but if it doesn't kickstart will create it), run the command:
 ```sh
-kickstart-it [--config=<path-to-file>]
+kickstart-it [--config=<path-to-file>] [--outputDir=<path-to-directory>]
 ```
 
 ### Flags
 
 - `--config`: use a config file (check the next section)
+- `--outputDir`: define the directory to init your project
+  - Should be a path string, i.e. `project`, `./project`, `./dir/project`
+  - If it's not created, kickstart will create it
+  - If it's not specified here or in the config, the default is current directory
 
 ### Configuration
 The config file must be in JSON. It can have the following properties:
@@ -60,6 +64,7 @@ The config file must be in JSON. It can have the following properties:
 | `unitTest` | "jest", "jasmine", false | |
 | `e2eTest` | "cypress", "playwright", false | |
 | `packageManager` | "npm", "yarn", "pnpm" | |
+| `outputDir` | String | Path strings, i.e. `project`, `./project`, `./dir/project` |
 
 
 ## 💬 Support
@@ -69,18 +74,12 @@ Having trouble? Please email me at danilo.vilhena@gmail.com
 
 **Please do!** This project is open source, and I greatly appreciate contributions from anyone! So report bugs, suggest new features and open pull requests to improve the current code!
 
+Here's the link for the repo 👇
+https://github.com/danilovilhena/kickstart-it
+
 ## 📝 Changelog
 
 Please check the [CHANGELOG](https://github.com/danilovilhena/kickstart-it/blob/main/CHANGELOG.md) file.
 
-## 🛣️ Roadmap
-
-- `--lang` flag to prompt questions in different language
-- Support to non-interactive terminals
-- Automated tests 😆
-- Bundlers, Babel and CI to the supported tools
-
 ## Did this package help you?
-Star this repo and share it with your friends. And if you'd like, send a donation here 👇
-
-<a href="https://www.buymeacoffee.com/danvilhena" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
+Star this repo and share it with your friends.
