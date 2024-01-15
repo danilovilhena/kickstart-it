@@ -2,6 +2,7 @@ import fs from 'fs'
 import { describe, expect, jest, test } from '@jest/globals'
 import { kickstart } from '../../src/core/index.js'
 import { args, setPartialConfig } from '../../src/helpers/globals.js'
+import { exec } from '../../src/helpers/index.js'
 
 jest.spyOn(process, 'exit').mockImplementation(() => {})
 const mockConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {})
@@ -42,5 +43,33 @@ describe('checkForOutputDir', () => {
     kickstart()
     expect(fs.mkdirSync).not.toHaveBeenCalled()
     expect(mockChdir).toHaveBeenCalledWith('test')
+  })
+})
+
+describe('checkForPackageJson and checkForGit', () => {
+  const mockDir = 'test/mockDir'
+
+  test('should create both files', async () => {
+    setPartialConfig({ packageManager: 'npm' })
+    args.outputDir = mockDir
+    await kickstart()
+
+    expect(fs.existsSync('./package.json')).toBe(true)
+    expect(fs.existsSync('./.git')).toBe(true)
+
+    process.chdir('../..')
+
+    await exec({ command: `rm -rf ${mockDir} && mkdir ${mockDir} && touch ${mockDir}/.gitkeep` })
+  })
+
+  test('should exec with pnpm and win32', async () => {
+    setPartialConfig({ packageManager: 'pnpm' })
+    args.outputDir = mockDir
+    await kickstart()
+
+    expect(mockConsoleError).not.toHaveBeenCalled()
+
+    process.chdir('../..')
+    await exec({ command: `rm -rf ${mockDir} && mkdir ${mockDir} && touch ${mockDir}/.gitkeep` })
   })
 })
