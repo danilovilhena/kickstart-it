@@ -1,5 +1,6 @@
+import fs from 'fs'
 import { beforeEach, describe, expect, jest, test } from '@jest/globals'
-import { cloneFile, exec, formatTime, parseArgs, spawn } from '../../src/helpers/index.js'
+import { cloneFile, exec, formatTime, parseArgs, spawn, clearUndefined } from '../../src/helpers/index.js'
 
 jest.spyOn(console, 'error').mockImplementation(() => {})
 const mockExit = jest.spyOn(process, 'exit').mockImplementation(() => {
@@ -57,6 +58,37 @@ describe('index', () => {
 
     parseArgs(originalArgs)
     expect(mockExit).not.toHaveBeenCalled()
+  })
+
+  test('clearUndefined - should remove undefined properties', () => {
+    fs.writeFileSync('./test/mocks/clearUndefined/package.json', JSON.stringify({
+      devDependencies: {
+        undefined: '1.0.0'
+      },
+      dependencies: {
+        undefined: '1.0.0'
+      }
+    }, null, 2))
+
+    process.chdir('./test/mocks/clearUndefined')
+
+    clearUndefined()
+
+    const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'))
+    expect(packageJson.devDependencies.undefined).toBeUndefined()
+    expect(packageJson.dependencies.undefined).toBeUndefined()
+    process.chdir('../../..')
+  })
+
+  test('clearUndefined - should not throw with no undefined properties', () => {
+    process.chdir('./test/mocks/clearUndefined')
+
+    clearUndefined()
+
+    const packageJson = JSON.parse(fs.readFileSync('./package.json', 'utf8'))
+    expect(packageJson.devDependencies.undefined).toBeUndefined()
+    expect(packageJson.dependencies.undefined).toBeUndefined()
+    process.chdir('../../..')
   })
 
   test('formatTime - should handle zero seconds', () => {

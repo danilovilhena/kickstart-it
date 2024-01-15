@@ -46,7 +46,7 @@ describe('validateSchema', () => {
     expect(mockExit).toHaveBeenCalledWith(1)
   })
 
-  test('should exit for invalid nestedvalue', () => {
+  test('should exit for invalid nested value', () => {
     const config = {
       ...defaultConfig,
       eslint: { integratePrettier: 'invalidValue' }
@@ -56,6 +56,19 @@ describe('validateSchema', () => {
 
     expect(mockConsoleError)
       .toHaveBeenCalledWith(chalk.red('[ERROR] Invalid value for eslint.integratePrettier: invalidValue'))
+    expect(mockExit).toHaveBeenCalledWith(1)
+  })
+
+  test('should exit for invalid regex value', () => {
+    const config = {
+      ...defaultConfig,
+      outputDir: ''
+    }
+
+    try { validateSchema(config) } catch (error) {}
+
+    expect(mockConsoleError)
+      .toHaveBeenCalledWith(chalk.red('[ERROR] Invalid value for outputDir: '))
     expect(mockExit).toHaveBeenCalledWith(1)
   })
 })

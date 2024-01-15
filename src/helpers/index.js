@@ -35,7 +35,6 @@ const spawn = async ({ command, errorMessage }) => {
         if (code === 0) resolve()
         else reject(new Error(code))
       })
-      child.on('error', () => reject(new Error()))
     })
   }
 
