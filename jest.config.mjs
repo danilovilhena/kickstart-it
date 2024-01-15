@@ -2,6 +2,7 @@
 const config = {
   verbose: true,
   silent: false,
+  clearMocks: true,
   moduleFileExtensions: [
     'js',
     'json'

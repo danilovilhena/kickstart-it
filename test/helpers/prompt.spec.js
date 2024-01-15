@@ -31,7 +31,6 @@ const mockPrompts = {
 
 describe('config', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
     Object.keys(config).forEach((key) => delete config[key])
   })
 

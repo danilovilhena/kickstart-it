@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { beforeEach, describe, expect, jest, test } from '@jest/globals'
+import { describe, expect, jest, test } from '@jest/globals'
 import { cloneFile, exec, formatTime, parseArgs, spawn, clearUndefined } from '../../src/helpers/index.js'
 
 jest.spyOn(console, 'error').mockImplementation(() => {})
@@ -8,10 +8,6 @@ const mockExit = jest.spyOn(process, 'exit').mockImplementation(() => {
 })
 
 describe('index', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
-
   test('cloneFile', async () => {
     const source = './test/mocks/mockFile.txt'
     const destination = './test/mocks/mockFileCopy.txt'

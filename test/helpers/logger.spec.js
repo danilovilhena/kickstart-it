@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, jest, test } from '@jest/globals'
+import { describe, expect, jest, test } from '@jest/globals'
 import chalk from 'chalk'
 import { logError, logSuccess, logWarning, startLoading, stopLoading } from '../../src/helpers/logger'
 
@@ -13,10 +13,6 @@ const mockStdoutClearLine = jest.spyOn(process.stdout, 'clearLine').mockImplemen
 const mockStdoutCursorTo = jest.spyOn(process.stdout, 'cursorTo').mockImplementation(() => {})
 
 describe('logger', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
-
   test('logWarning - should log message', () => {
     logWarning('Warning message')
     expect(mockConsoleLog).toHaveBeenCalledWith(chalk.yellow('Warning message'))

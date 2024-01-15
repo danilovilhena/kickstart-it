@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, jest, test } from '@jest/globals'
+import { describe, expect, jest, test } from '@jest/globals'
 import chalk from 'chalk'
 import { validateSchema } from '../../src/helpers/configSchema.js'
 import { defaultConfig } from '../../src/helpers/globals.js'
@@ -9,10 +9,6 @@ const mockExit = jest.spyOn(process, 'exit').mockImplementation(() => {
 })
 
 describe('validateSchema', () => {
-  beforeEach(() => {
-    jest.clearAllMocks()
-  })
-
   test('should not throw error for valid config', () => {
     const config = { ...defaultConfig }
 
