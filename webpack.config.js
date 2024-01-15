@@ -14,7 +14,7 @@ export default {
   plugins: [
     new webpack.BannerPlugin({ banner: '#!/usr/bin/env node', raw: true })
   ],
-  target: 'node',
+  target: 'node14',
   optimization: {
     minimize: true
   }
