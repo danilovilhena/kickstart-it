@@ -102,12 +102,12 @@ const createChangelog = async () => {
 }
 
 const installCommitizen = async () => {
-  startLoading('Installing Husky')
+  startLoading('Installing Commitizen')
   const packageManager = config.packageManager
 
   await exec({
     command: installCommand({ name: 'commitizen', isGlobal: true, packageManager }),
-    errorMessage: 'Could not install commitizen'
+    errorMessage: 'Could not install Commitizen'
   })
 
   const initCommand = {
@@ -118,11 +118,11 @@ const installCommitizen = async () => {
 
   await exec({
     command: initCommand[packageManager],
-    errorMessage: 'Could not init commitizen'
+    errorMessage: 'Could not init Commitizen'
   })
 
   stopLoading()
-  logSuccess('Installed commitizen')
+  logSuccess('Installed Commitizen')
 }
 
 const createReadme = async () => {
