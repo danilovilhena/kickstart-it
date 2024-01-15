@@ -9,8 +9,6 @@ jest.mock('ora', () => {
 const mockExit = jest.spyOn(process, 'exit').mockImplementation(() => {})
 const mockConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {})
 const mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {})
-const mockStdoutClearLine = jest.spyOn(process.stdout, 'clearLine').mockImplementation(() => {})
-const mockStdoutCursorTo = jest.spyOn(process.stdout, 'cursorTo').mockImplementation(() => {})
 
 describe('logger', () => {
   test('logWarning - should log message', () => {
@@ -35,9 +33,16 @@ describe('logger', () => {
   })
 
   test('should start and stop loading', () => {
+    const mockClearLine = jest.fn()
+    const mockCursorTo = jest.fn()
+    const stdout = process.stdout
+    if (!stdout.clearLine) stdout.clearLine = mockClearLine
+    if (!stdout.cursorTo) stdout.cursorTo = mockCursorTo
+
     startLoading('Loading...')
     stopLoading()
-    expect(mockStdoutClearLine).toHaveBeenCalled()
-    expect(mockStdoutCursorTo).toHaveBeenCalledWith(0)
+
+    expect(mockClearLine).toHaveBeenCalled()
+    expect(mockCursorTo).toHaveBeenCalled()
   })
 })

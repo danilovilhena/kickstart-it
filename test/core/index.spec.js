@@ -7,7 +7,7 @@ import { exec } from '../../src/helpers/index.js'
 jest.spyOn(process, 'exit').mockImplementation(() => {})
 const mockConsoleLog = jest.spyOn(console, 'log').mockImplementation(() => {})
 const mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {})
-
+const mockDir = 'test/mockDir'
 fs.mkdirSync = jest.fn().mockImplementation(() => {})
 
 describe('checkForOutputDir', () => {
@@ -47,8 +47,6 @@ describe('checkForOutputDir', () => {
 })
 
 describe('checkForPackageJson and checkForGit', () => {
-  const mockDir = 'test/mockDir'
-
   test('should create both files', async () => {
     setPartialConfig({ packageManager: 'npm' })
     args.outputDir = mockDir
@@ -58,7 +56,6 @@ describe('checkForPackageJson and checkForGit', () => {
     expect(fs.existsSync('./.git')).toBe(true)
 
     process.chdir('../..')
-
     await exec({ command: `rm -rf ${mockDir} && mkdir ${mockDir} && touch ${mockDir}/.gitkeep` })
   })
 
@@ -67,6 +64,27 @@ describe('checkForPackageJson and checkForGit', () => {
     args.outputDir = mockDir
     await kickstart()
 
+    expect(mockConsoleError).not.toHaveBeenCalled()
+
+    process.chdir('../..')
+    await exec({ command: `rm -rf ${mockDir} && mkdir ${mockDir} && touch ${mockDir}/.gitkeep` })
+  })
+})
+
+describe('createChangelog', () => {
+  test('should create changelog', async () => {
+    setPartialConfig({ changelog: true })
+    await kickstart()
+    expect(fs.existsSync('./CHANGELOG.md')).toBe(true)
+
+    process.chdir('../..')
+    await exec({ command: `rm -rf ${mockDir} && mkdir ${mockDir} && touch ${mockDir}/.gitkeep` })
+  })
+
+  test('should not create changelog if it\'s created', async () => {
+    setPartialConfig({ changelog: true })
+    fs.writeFileSync(`./${mockDir}/CHANGELOG.md`, '')
+    await kickstart()
     expect(mockConsoleError).not.toHaveBeenCalled()
 
     process.chdir('../..')
