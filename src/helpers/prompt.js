@@ -181,8 +181,10 @@ const promptQuestions = async () => {
 
   await prompt('lint')
   if (config.lint === 'eslint') {
-    config.eslint.integratePrettier = await prompt('integratePrettier', true)
-    config.eslint.configuration = await prompt('configuration', true)
+    config.eslint = {
+      integratePrettier: await prompt('integratePrettier', true),
+      configuration: await prompt('configuration', true)
+    }
   }
   if (!config?.eslint?.integratePrettier) await prompt('format')
   if (config.format === 'prettier' || ['eslint', 'standardjs'].includes(config.lint)) await prompt('lintStaged')
